@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Asesoria | Entre Vinos y Jardines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="topbar"><span>Envios a todo Chile</span><span>Asesoria especializada</span><span>Calidad garantizada</span><span class="social">Siguenos</span></div>
+    <nav class="navbar" aria-label="Principal">
+      <a class="brand" href="index.html"><span class="brand-mark">VV</span><span><strong>Entre Vinos y Jardines</strong><small>Catalogo verde</small></span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"><span></span><span></span><span></span></button>
+      <div class="menu" id="main-menu"><a href="index.html">Inicio</a><a href="productos.html">Productos</a><a href="servicios.html">Servicios</a><a class="active" href="asesorias.html">Asesoria</a><a href="nosotros.html">Nosotros</a><a href="contacto.html">Contacto</a></div>
+      <div class="nav-actions"><button class="cart-button" aria-label="Carrito de compras">🛒<span id="cart-count">2</span></button><a class="whatsapp" href="https://wa.me/56965051137">WhatsApp</a></div>
+    </nav>
+  </header>
+  <main>
+    <section class="page-hero advice-hero"><div><p class="eyebrow">Acompanamiento experto</p><h1>Agenda una asesoria para tu jardin</h1><p>Cuéntanos qué espacio quieres mejorar y te orientamos con especies, riego, cuidados y presupuesto inicial.</p></div></section>
+    <section class="split-section">
+      <div class="info-panel">
+        <h2>¿Que incluye?</h2>
+        <ul class="check-list">
+          <li>Diagnostico del espacio y condiciones de luz.</li>
+          <li>Recomendacion de plantas segun clima y mantencion.</li>
+          <li>Propuesta inicial de riego, sustrato y cuidados.</li>
+          <li>Presupuesto referencial para productos o servicio.</li>
+        </ul>
+      </div>
+      <form class="contact-form" id="advice-form">
+        <h2>Solicitar asesoria</h2>
+        <label>Nombre<input name="nombre" required></label>
+        <label>Comuna<input name="comuna" required></label>
+        <label>Tipo de ayuda<select name="servicio"><option>Diseno de jardin</option><option>Mantencion</option><option>Riego</option><option>Compra de plantas</option></select></label>
+        <label>Mensaje<textarea name="mensaje" rows="5" placeholder="Ej: Tengo una terraza con sol de tarde y quiero plantas de bajo cuidado."></textarea></label>
+        <button class="button primary" type="submit">Enviar por WhatsApp</button>
+      </form>
+    </section>
+  </main>
+  <footer class="footer"><p class="copyright">© 2026 Entre Vinos y Jardines Catalogo verde. WhatsApp: +56 9 6505 1137</p></footer>
+  <script src="script.js"></script>
+</body>
+</html>

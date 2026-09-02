@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Productos | Entre Vinos y Jardines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="topbar"><span>Envios a todo Chile</span><span>Asesoria especializada</span><span>Calidad garantizada</span><span class="social">Siguenos</span></div>
+    <nav class="navbar" aria-label="Principal">
+      <a class="brand" href="index.html"><span class="brand-mark">EV</span><span><strong>Entre Vinos y Jardines</strong><small>Catalogo verde</small></span></a>
+      <button class="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu"><span></span><span></span><span></span></button>
+      <div class="menu" id="main-menu">
+        <a href="index.html">Inicio</a><a class="active" href="productos.html">Productos</a><a href="servicios.html">Servicios</a><a href="asesorias.html">Asesoria</a><a href="nosotros.html">Nosotros</a><a href="contacto.html">Contacto</a>
+      </div>
+      <div class="nav-actions"><button class="icon-button" aria-label="Buscar">⌕</button><button class="icon-button" aria-label="Cuenta">♙</button><button class="cart-button" aria-label="Carrito de compras">🛒<span id="cart-count">2</span></button><a class="whatsapp" href="https://wa.me/56965051137">WhatsApp</a></div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-hero compact-hero">
+      <div>
+        <p class="eyebrow">Catalogo publico</p>
+        <h1>Vivero Entre Vinos y Jardines</h1>
+        <p>Catalogo completo actualizado a julio de 2026. Selecciona plantas, arma tu pedido y cotiza gratis por WhatsApp.</p>
+      </div>
+    </section>
+
+    <section class="catalog-layout">
+      <aside class="filters" aria-label="Filtros de productos">
+        <h2>Filtrar</h2>
+        <button class="filter-button active" data-filter="todos">Todos</button>
+        <button class="filter-button" data-filter="Frutales">Frutales</button>
+        <button class="filter-button" data-filter="Árboles Ornamentales">Árboles Ornamentales</button>
+        <button class="filter-button" data-filter="Arbustos">Arbustos</button>
+      </aside>
+
+      <section class="catalog-content" aria-label="Listado de productos">
+        <div class="catalog-toolbar">
+          <h2>33 productos disponibles</h2>
+          <input id="product-search" type="search" placeholder="Buscar producto" aria-label="Buscar producto">
+        </div>
+
+        <div class="product-grid catalog-grid">
+          <article class="product-card catalog-item" data-category="Frutales" data-name="limonero (2 m) limonero">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/limonero-2-m-1.gif" alt="Limonero (2 m)">
+            <div class="product-info"><span class="product-category">Frutales</span><h3>Limonero (2 m)</h3><p>Altura disponible: 2 m. Precio actualizado Julio 2026.</p><strong>$15.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Frutales" data-name="mandarino (1,5 m) mandarino">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/mandarino-1-5-m-2.gif" alt="Mandarino (1,5 m)">
+            <div class="product-info"><span class="product-category">Frutales</span><h3>Mandarino (1,5 m)</h3><p>Altura disponible: 1,5 m. Precio actualizado Julio 2026.</p><strong>$12.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Frutales" data-name="naranjo (1,5 m) naranjo">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/naranjo-1-5-m-3.gif" alt="Naranjo (1,5 m)">
+            <div class="product-info"><span class="product-category">Frutales</span><h3>Naranjo (1,5 m)</h3><p>Altura disponible: 1,5 m. Precio actualizado Julio 2026.</p><strong>$12.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Frutales" data-name="paltos (1 m) paltos">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/paltos-1-m-4.gif" alt="Paltos (1 m)">
+            <div class="product-info"><span class="product-category">Frutales</span><h3>Paltos (1 m)</h3><p>Altura disponible: 1 m. Precio actualizado Julio 2026.</p><strong>$10.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Frutales" data-name="nispero (1,2 m) nispero">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/nispero-1-2-m-5.gif" alt="Nispero (1,2 m)">
+            <div class="product-info"><span class="product-category">Frutales</span><h3>Nispero (1,2 m)</h3><p>Altura disponible: 1,2 m. Precio actualizado Julio 2026.</p><strong>$8.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Árboles Ornamentales" data-name="abutilón (40 cm) abutilón">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/abutilon-40-cm-6.gif" alt="Abutilón (40 cm)">
+            <div class="product-info"><span class="product-category">Árboles Ornamentales</span><h3>Abutilón (40 cm)</h3><p>Altura disponible: 40 cm. Precio actualizado Julio 2026.</p><strong>$6.500</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Árboles Ornamentales" data-name="pino azul (30 cm) pino azul">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/pino-azul-30-cm-7.gif" alt="Pino Azul (30 cm)">
+            <div class="product-info"><span class="product-category">Árboles Ornamentales</span><h3>Pino Azul (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$7.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Árboles Ornamentales" data-name="pino azul (1 m) pino azul">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/pino-azul-1-m-8.gif" alt="Pino Azul (1 m)">
+            <div class="product-info"><span class="product-category">Árboles Ornamentales</span><h3>Pino Azul (1 m)</h3><p>Altura disponible: 1 m. Precio actualizado Julio 2026.</p><strong>$15.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Árboles Ornamentales" data-name="arrayán (30 cm) arrayán">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/arrayan-30-cm-9.gif" alt="Arrayán (30 cm)">
+            <div class="product-info"><span class="product-category">Árboles Ornamentales</span><h3>Arrayán (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$2.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="abelia (70 cm) abelia">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/abelia-70-cm-10.gif" alt="Abelia (70 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Abelia (70 cm)</h3><p>Altura disponible: 70 cm. Precio actualizado Julio 2026.</p><strong>$7.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="abelia (30 cm) abelia">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/abelia-30-cm-11.gif" alt="Abelia (30 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Abelia (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$3.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="azaleas (40 cm) azaleas">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/azaleas-40-cm-12.gif" alt="Azaleas (40 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Azaleas (40 cm)</h3><p>Altura disponible: 40 cm. Precio actualizado Julio 2026.</p><strong>$8.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="boj (15 cm) boj">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/boj-15-cm-13.gif" alt="Boj (15 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Boj (15 cm)</h3><p>Altura disponible: 15 cm. Precio actualizado Julio 2026.</p><strong>$3.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="camelia (30 cm) camelia">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/camelia-30-cm-14.gif" alt="Camelia (30 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Camelia (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$8.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="camelia (60 cm) camelia">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/camelia-60-cm-15.gif" alt="Camelia (60 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Camelia (60 cm)</h3><p>Altura disponible: 60 cm. Precio actualizado Julio 2026.</p><strong>$12.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="chilco (25 cm) chilco">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/chilco-25-cm-16.gif" alt="Chilco (25 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Chilco (25 cm)</h3><p>Altura disponible: 25 cm. Precio actualizado Julio 2026.</p><strong>$3.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="coprosma nigra (25 cm) coprosma nigra">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/coprosma-nigra-25-cm-17.gif" alt="Coprosma Nigra (25 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Coprosma Nigra (25 cm)</h3><p>Altura disponible: 25 cm. Precio actualizado Julio 2026.</p><strong>$4.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="coprosma sunrise (25 cm) coprosma sunrise">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/coprosma-sunrise-25-cm-18.gif" alt="Coprosma Sunrise (25 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Coprosma Sunrise (25 cm)</h3><p>Altura disponible: 25 cm. Precio actualizado Julio 2026.</p><strong>$4.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="coprosma inferno (25 cm) coprosma inferno">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/coprosma-inferno-25-cm-19.gif" alt="Coprosma Inferno (25 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Coprosma Inferno (25 cm)</h3><p>Altura disponible: 25 cm. Precio actualizado Julio 2026.</p><strong>$4.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="fosforito (25 cm) fosforito">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/fosforito-25-cm-20.gif" alt="Fosforito (25 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Fosforito (25 cm)</h3><p>Altura disponible: 25 cm. Precio actualizado Julio 2026.</p><strong>$3.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="jazmín enredadera (70 cm) jazmín enredadera">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/jazmin-enredadera-70-cm-21.gif" alt="Jazmín enredadera (70 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Jazmín enredadera (70 cm)</h3><p>Altura disponible: 70 cm. Precio actualizado Julio 2026.</p><strong>$7.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="laurel flor (80 cm) laurel flor">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/laurel-flor-80-cm-22.gif" alt="Laurel Flor (80 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Laurel Flor (80 cm)</h3><p>Altura disponible: 80 cm. Precio actualizado Julio 2026.</p><strong>$8.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="laurentina (30 cm) laurentina">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/laurentina-30-cm-23.gif" alt="Laurentina (30 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Laurentina (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$5.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="laurentina (60 cm) laurentina">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/laurentina-60-cm-24.gif" alt="Laurentina (60 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Laurentina (60 cm)</h3><p>Altura disponible: 60 cm. Precio actualizado Julio 2026.</p><strong>$8.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="lavanda (40 cm) lavanda">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/lavanda-40-cm-25.gif" alt="Lavanda (40 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Lavanda (40 cm)</h3><p>Altura disponible: 40 cm. Precio actualizado Julio 2026.</p><strong>$3.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Árboles Ornamentales" data-name="palmera (40 cm) palmera">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/palmera-40-cm-26.gif" alt="Palmera (40 cm)">
+            <div class="product-info"><span class="product-category">Árboles Ornamentales</span><h3>Palmera (40 cm)</h3><p>Altura disponible: 40 cm. Precio actualizado Julio 2026.</p><strong>$7.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="paquerete (60 cm) paquerete">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/paquerete-60-cm-27.gif" alt="Paquerete (60 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Paquerete (60 cm)</h3><p>Altura disponible: 60 cm. Precio actualizado Julio 2026.</p><strong>$4.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="rododendro (30 cm) rododendro">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/rododendro-30-cm-28.gif" alt="Rododendro (30 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Rododendro (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$8.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="romero (30 cm) romero">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/romero-30-cm-29.gif" alt="Romero (30 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Romero (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$2.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="verónica buxifolia (30 cm) verónica buxifolia">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/veronica-buxifolia-30-cm-30.gif" alt="Verónica Buxifolia (30 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Verónica Buxifolia (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$3.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="verónica colombiana (25 cm) verónica colombiana">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/veronica-colombiana-25-cm-31.gif" alt="Verónica Colombiana (25 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Verónica Colombiana (25 cm)</h3><p>Altura disponible: 25 cm. Precio actualizado Julio 2026.</p><strong>$3.500</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="verónica variegada (30 cm) verónica variegada">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/veronica-variegada-30-cm-32.gif" alt="Verónica Variegada (30 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Verónica Variegada (30 cm)</h3><p>Altura disponible: 30 cm. Precio actualizado Julio 2026.</p><strong>$4.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+          <article class="product-card catalog-item" data-category="Arbustos" data-name="dafne odorosa (70 cm) dafne odorosa">
+            <button class="favorite" aria-label="Agregar a favoritos">♡</button>
+            <img src="catalogo-img/dafne-odorosa-70-cm-33.gif" alt="Dafne odorosa (70 cm)">
+            <div class="product-info"><span class="product-category">Arbustos</span><h3>Dafne odorosa (70 cm)</h3><p>Altura disponible: 70 cm. Precio actualizado Julio 2026.</p><strong>$25.000</strong><button class="add-cart">Agregar</button></div>
+          </article>
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="footer" id="contacto">
+    <div class="footer-grid">
+      <div><a class="brand footer-brand" href="index.html"><span class="brand-mark">EV</span><span><strong>Entre Vinos y Jardines</strong><small>Catalogo verde</small></span></a><p>Plantas de vivero, frutales, arbustos y ornamentales para jardines y terrazas.</p></div>
+      <div><h3>Productos</h3><a href="productos.html">Frutales</a><a href="productos.html">Arbustos</a><a href="productos.html">Árboles ornamentales</a></div>
+      <div><h3>Servicios</h3><a href="servicios.html">Diseno de jardines</a><a href="servicios.html">Construccion</a><a href="servicios.html">Mantencion</a><a href="servicios.html">Riego</a></div>
+      <div><h3>Contacto</h3><p>WhatsApp: +56 9 6505 1137</p><p>Cotizaciones por WhatsApp</p><p>Ubicacion exacta protegida en mapa</p></div>
+    </div>
+    <p class="copyright">© 2026 Entre Vinos y Jardines. Todos los derechos reservados.</p>
+  </footer>
+  <script src="script.js"></script>
+</body>
+</html>
