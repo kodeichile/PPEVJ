@@ -23,17 +23,18 @@ async function callAppsScript<T>(payload: Record<string, unknown>): Promise<T> {
 }
 
 export async function listProducts({ includeInactive = false } = {}): Promise<Product[]> {
-  if (!APPSCRIPT_URL) return includeInactive ? fallbackProducts : fallbackProducts.filter((p) => p.activo);
+  const localProducts = sortProducts(includeInactive ? fallbackProducts : fallbackProducts.filter((p) => p.activo));
+  if (!APPSCRIPT_URL) return localProducts;
 
   const url = new URL(APPSCRIPT_URL);
   url.searchParams.set("action", "listar");
   if (includeInactive) url.searchParams.set("token", APPSCRIPT_TOKEN || "");
 
   const response = await fetch(url, { cache: "no-store" });
-  if (!response.ok) return includeInactive ? fallbackProducts : fallbackProducts.filter((p) => p.activo);
+  if (!response.ok) return localProducts;
   const data = await response.json();
   const products = Array.isArray(data) ? data : data.products || [];
-  return includeInactive ? products : products.filter((p: Product) => p.activo);
+  return sortProducts(includeInactive ? products : products.filter((p: Product) => p.activo));
 }
 
 export async function createProduct(product: ProductInput) {
@@ -58,4 +59,12 @@ export async function uploadProductImage(file: File) {
   };
   const data = await callAppsScript<{ ok: boolean; url: string }>(payload);
   return data.url;
+}
+
+function sortProducts(products: Product[]) {
+  return [...products].sort((a, b) => {
+    const categoryCompare = String(a.categoria || "").localeCompare(String(b.categoria || ""), "es");
+    if (categoryCompare !== 0) return categoryCompare;
+    return (Number(a.orden) || 0) - (Number(b.orden) || 0);
+  });
 }

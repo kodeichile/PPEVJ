@@ -1,4 +1,14 @@
-export type Product = { id: string; nombre: string; precio: number; imagen_url: string; descripcion: string; activo: boolean; fecha_creacion?: string };
+export type Product = {
+  id: string;
+  nombre: string;
+  precio: number;
+  imagen_url: string;
+  descripcion: string;
+  activo: boolean;
+  categoria?: string;
+  orden?: number;
+  fecha_creacion?: string;
+};
 
 export const fallbackProducts: Product[] = [
   {

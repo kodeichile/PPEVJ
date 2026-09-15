@@ -1,5 +1,6 @@
 const SHEET_NAME = "Productos";
 const DRIVE_FOLDER_ID = "PEGA_AQUI_EL_ID_DE_LA_CARPETA";
+const HEADERS = ["id", "nombre", "precio", "imagen_url", "descripcion", "categoria", "orden", "activo", "fecha_creacion"];
 
 function doGet(e) {
   const action = e.parameter.action;
@@ -31,7 +32,14 @@ function sheet_() {
   let sheet = spreadsheet.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = spreadsheet.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
-    sheet.appendRow(["id", "nombre", "precio", "imagen_url", "descripcion", "activo", "fecha_creacion"]);
+    sheet.appendRow(HEADERS);
+  } else {
+    const currentHeaders = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    HEADERS.forEach((header) => {
+      if (currentHeaders.indexOf(header) === -1) {
+        sheet.getRange(1, sheet.getLastColumn() + 1).setValue(header);
+      }
+    });
   }
   return sheet;
 }
@@ -43,6 +51,8 @@ function readProducts_() {
     const product = {};
     headers.forEach((header, index) => product[header] = row[index]);
     product.precio = Number(product.precio) || 0;
+    product.orden = Number(product.orden) || 0;
+    product.categoria = product.categoria || inferCategory_(product);
     product.activo = product.activo === true || String(product.activo).toUpperCase() === "TRUE";
     return product;
   });
@@ -50,16 +60,21 @@ function readProducts_() {
 
 function crearProducto_(product) {
   const id = product.id || Utilities.getUuid();
-  sheet_().appendRow([
+  const savedProduct = Object.assign({}, product, {
     id,
-    product.nombre || "",
-    Number(product.precio) || 0,
-    product.imagen_url || "",
-    product.descripcion || "",
-    product.activo !== false,
-    new Date().toISOString()
-  ]);
-  return { ok: true, product: Object.assign({}, product, { id }) };
+    nombre: product.nombre || "",
+    precio: Number(product.precio) || 0,
+    imagen_url: product.imagen_url || "",
+    descripcion: product.descripcion || "",
+    categoria: product.categoria || inferCategory_(Object.assign({}, product, { id })),
+    orden: Number(product.orden) || 0,
+    activo: product.activo !== false,
+    fecha_creacion: new Date().toISOString()
+  });
+  const sheet = sheet_();
+  const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  sheet.appendRow(headers.map((header) => savedProduct[header] !== undefined ? savedProduct[header] : ""));
+  return { ok: true, product: savedProduct };
 }
 
 function actualizarProducto_(id, updates) {
@@ -77,6 +92,13 @@ function actualizarProducto_(id, updates) {
   });
 
   return { ok: true };
+}
+
+function inferCategory_(product) {
+  const id = String(product.id || "").toLowerCase();
+  if (["limonero", "mandarino", "naranjo", "paltos", "nispero"].some((token) => id.indexOf(token) >= 0)) return "Frutales";
+  if (["abutilon", "pino-azul", "arrayan", "palmera"].some((token) => id.indexOf(token) >= 0)) return "Árboles Ornamentales";
+  return "Arbustos";
 }
 
 function subirImagen_(body) {

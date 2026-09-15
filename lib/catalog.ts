@@ -10,14 +10,15 @@ export type Service = {
   icon: string;
 };
 
-export const productCategories = ["Todos", "Frutales", "Arboles Ornamentales", "Arbustos"];
+export const productCategories = ["Todos", "Frutales", "Árboles Ornamentales", "Arbustos", "Flores", "Árboles", "Aromáticas"];
 
 const categoryById = [
   { test: ["limonero", "mandarino", "naranjo", "paltos", "nispero"], category: "Frutales" },
-  { test: ["abutilon", "pino-azul", "arrayan", "palmera"], category: "Arboles Ornamentales" }
+  { test: ["abutilon", "pino-azul", "arrayan", "palmera"], category: "Árboles Ornamentales" }
 ];
 
 export function productCategory(product: Product) {
+  if (product.categoria) return product.categoria;
   const id = product.id.toLowerCase();
   return categoryById.find((entry) => entry.test.some((token) => id.includes(token)))?.category || "Arbustos";
 }
