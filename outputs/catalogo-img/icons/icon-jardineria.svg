@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Jardineria</title>
+  <g fill="none" stroke="#19733f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M18 47h28"/>
+    <path d="M24 47l-3-20h22l-3 20"/>
+    <path d="M20 27h24"/>
+    <path d="M32 27V13"/>
+    <path d="M32 22c-7.2-.7-11.8-5.3-13.3-13.5C27.2 8.8 32.4 13.5 32 22Z" fill="#eef8f1"/>
+    <path d="M32 24c7.7-.5 12.7-5.3 14.4-14.1C37.2 10.2 32 15.2 32 24Z" fill="#eef8f1"/>
+  </g>
+</svg>

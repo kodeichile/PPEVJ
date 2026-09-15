@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ingreso cliente | Entre Vinos y Jardines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260914-51">
+</head>
+<body class="auth-body">
+  <main class="login-page">
+    <section class="login-card">
+      <a class="brand login-brand" href="index.html">
+        <img class="brand-logo" src="catalogo-img/logo-entre-vinos-jardines-recortado.png" alt="Entre Vinos y Jardines">
+      </a>
+
+      <div class="login-copy">
+        <p class="eyebrow">Acceso privado</p>
+        <h1>Ingreso al panel</h1>
+        <p>Entra para revisar la administraci&oacute;n del cat&aacute;logo sin mezclar el acceso con la p&aacute;gina principal.</p>
+      </div>
+
+      <div class="login-form">
+        <p class="login-error" id="login-error" role="alert"></p>
+        <button class="google-login-button" type="button" id="google-login-button">
+          <span class="google-mark" aria-hidden="true">G</span>
+          Continuar con Google
+        </button>
+      </div>
+
+      <a class="login-back" href="index.html">Volver al sitio</a>
+    </section>
+  </main>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-auth-compat.js"></script>
+  <script>
+    window.entreVinosFirebaseConfig = {
+      apiKey: "",
+      authDomain: "",
+      projectId: "",
+      appId: ""
+    };
+  </script>
+  <script src="script.js?v=20260914-48"></script>
+</body>
+</html>

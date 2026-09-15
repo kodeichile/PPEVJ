@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Mantencion</title>
+  <g fill="none" stroke="#19733f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M38 17 17 38a8.5 8.5 0 0 0 12 12l21-21"/>
+    <path d="M44 11 53 2"/>
+    <path d="M46 31 62 15"/>
+    <path d="M38 17c4 4.3 7.1 7.4 12 12"/>
+    <path d="M17 38l12 12"/>
+    <path d="M31 24c-5.5-.5-9.1-4-10.3-10.3C27.5 14 31.4 17.8 31 24Z" fill="#eef8f1"/>
+  </g>
+</svg>

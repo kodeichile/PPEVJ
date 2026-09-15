@@ -1,0 +1,13 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 360" role="img" aria-labelledby="title desc">
+  <title id="title">Logo de Entre Vinos y Jardines</title>
+  <desc id="desc">Monograma sobrio EVJ con una hoja decorativa.</desc>
+  <rect width="720" height="360" fill="#172019"/>
+  <rect x="36" y="36" width="648" height="288" rx="10" fill="#223128" stroke="#4c5d52" stroke-width="4"/>
+  <path d="M130 104c92 0 129 55 155 126 20-68 72-126 161-126" fill="none" stroke="#c8d8b8" stroke-width="7" stroke-linecap="round"/>
+  <path d="M446 104c-44 16-69 48-76 96 47-5 83-29 106-73 5-9-2-26-30-23Z" fill="#6f8f5d" stroke="#c8d8b8" stroke-width="5"/>
+  <path d="M410 171c20-18 39-31 61-44" fill="none" stroke="#223128" stroke-width="4" stroke-linecap="round"/>
+  <text x="360" y="196" text-anchor="middle" fill="#f4f7ec" font-family="Georgia, 'Times New Roman', serif" font-size="92" font-weight="700" letter-spacing="0">EVJ</text>
+  <line x1="158" y1="224" x2="562" y2="224" stroke="#f0a55b" stroke-width="3" stroke-linecap="round"/>
+  <text x="360" y="263" text-anchor="middle" fill="#d0dacb" font-family="Arial, Helvetica, sans-serif" font-size="27" font-weight="700" letter-spacing="3">ENTRE VINOS Y JARDINES</text>
+  <text x="360" y="294" text-anchor="middle" fill="#9eac9f" font-family="Arial, Helvetica, sans-serif" font-size="17" letter-spacing="2">VIVERO - DECORACION - NATURALEZA</text>
+</svg>

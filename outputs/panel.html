@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Panel | Entre Vinos y Jardines</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css?v=20260914-51">
+</head>
+<body class="panel-body" data-requires-login="true">
+  <header class="site-header">
+    <div class="topbar"><span>Panel privado</span><span>Entre Vinos y Jardines</span><span>Catalogo verde</span><span>Cliente</span></div>
+    <nav class="navbar" aria-label="Panel">
+      <a class="brand" href="index.html"><img class="brand-logo" src="catalogo-img/logo-entre-vinos-jardines-recortado.png" alt="Entre Vinos y Jardines"></a>
+      <div class="menu panel-menu" id="main-menu"><a href="panel.html" class="active">Panel</a><a href="#preview-panel" id="open-preview">Previsualizaci&oacute;n</a><a href="contacto.html">Contacto</a></div>
+      <button class="button logout-button" type="button" id="logout-button">Cerrar sesi&oacute;n</button>
+    </nav>
+  </header>
+
+  <main class="admin-page">
+    <section class="admin-hero">
+      <div>
+        <p class="eyebrow">Administraci&oacute;n</p>
+        <h1>Panel del cat&aacute;logo</h1>
+        <p>Gestiona productos del vivero desde una ventana separada del sitio p&uacute;blico.</p>
+      </div>
+    </section>
+
+    <section class="admin-dashboard">
+      <div class="admin-side">
+      <form class="admin-form category-form" id="add-category-form">
+        <h2>Agregar categor&iacute;a</h2>
+        <label>Nombre de categor&iacute;a<input id="add-category-name" type="text" placeholder="Ej: Flores" required></label>
+        <button class="button primary" type="submit">Crear categor&iacute;a</button>
+      </form>
+
+      <form class="admin-form admin-category collapsible-form is-collapsed" id="add-product-form">
+        <button class="category-header form-toggle" type="button" aria-expanded="false">
+          <span class="category-toggle form-title"><span><strong>Agregar producto</strong><small>Nuevo producto</small></span></span>
+          <span class="category-actions"><span class="category-chevron form-chevron" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"></path></svg></span></span>
+        </button>
+        <div class="form-body">
+          <label>Nombre<input id="add-product-name" type="text" placeholder="Ej: Lavanda 40 cm" required></label>
+          <label>Precio<input id="add-product-price" type="number" min="0" step="100" placeholder="3000" required></label>
+          <label>Categor&iacute;a
+            <select id="add-product-category" required>
+              <option value="frutales">Frutales</option>
+              <option value="arboles-ornamentales">&Aacute;rboles Ornamentales</option>
+              <option value="arbustos">Arbustos</option>
+              <option value="flores">Flores</option>
+            </select>
+          </label>
+          <label>Descripci&oacute;n<textarea id="add-product-description" rows="4" placeholder="Altura, cuidados o disponibilidad"></textarea></label>
+          <label class="admin-upload-field">
+            Imagen
+            <img class="admin-upload-preview" id="add-product-preview" src="" alt="Vista previa del producto">
+            <span class="file-drop admin-file-drop">Seleccionar foto</span>
+            <input class="visually-hidden-file" id="add-product-image" type="file" accept="image/*">
+          </label>
+          <button class="button primary" type="submit">Guardar producto</button>
+        </div>
+      </form>
+
+      </div>
+
+      <div class="admin-products">
+        <div class="admin-toolbar">
+          <h2>Productos actuales</h2>
+          <span>Arrastra para ordenar</span>
+        </div>
+
+        <div class="category-list" id="category-list">
+        <article class="admin-product-row" draggable="true" data-category="arboles" data-description="Arbol frutal ideal para jardin, terraza amplia o huerto familiar. Requiere buena luz y riego moderado.">
+          <img src="catalogo-img/limonero-2-m-1.gif" alt="Limonero">
+          <div>
+            <h3>Limonero (2 m)</h3>
+            <p>Activo &middot; $15.000</p>
+            <span class="category-pill">&Aacute;rboles</span>
+            <div class="product-actions" aria-label="Acciones del producto">
+              <button class="icon-button edit-button" type="button" aria-label="Editar producto">&#9998;</button>
+              <button class="icon-button delete-button" type="button" aria-label="Eliminar producto">&#128465;</button>
+            </div>
+          </div>
+          <label class="switch-label"><input type="checkbox" checked><span></span></label>
+        </article>
+
+        <article class="admin-product-row" draggable="true" data-category="arboles" data-description="Mandarino de temporada para espacios exteriores con sol directo. Producto activo y disponible para cotizacion.">
+          <img src="catalogo-img/mandarino-1-5-m-2.gif" alt="Mandarino">
+          <div>
+            <h3>Mandarino (1,5 m)</h3>
+            <p>Activo &middot; $12.000</p>
+            <span class="category-pill">&Aacute;rboles</span>
+            <div class="product-actions" aria-label="Acciones del producto">
+              <button class="icon-button edit-button" type="button" aria-label="Editar producto">&#9998;</button>
+              <button class="icon-button delete-button" type="button" aria-label="Eliminar producto">&#128465;</button>
+            </div>
+          </div>
+          <label class="switch-label"><input type="checkbox" checked><span></span></label>
+        </article>
+
+        <article class="admin-product-row" draggable="true" data-category="aromaticas" data-description="Planta aromatica resistente, perfecta para cocina, maceteros y bordes de jardin. Necesita riego bajo y buena luz.">
+          <img src="catalogo-img/romero-30-cm-29.gif" alt="Romero">
+          <div>
+            <h3>Romero (30 cm)</h3>
+            <p>Activo &middot; $2.000</p>
+            <span class="category-pill">Arom&aacute;ticas</span>
+            <div class="product-actions" aria-label="Acciones del producto">
+              <button class="icon-button edit-button" type="button" aria-label="Editar producto">&#9998;</button>
+              <button class="icon-button delete-button" type="button" aria-label="Eliminar producto">&#128465;</button>
+            </div>
+          </div>
+          <label class="switch-label"><input type="checkbox" checked><span></span></label>
+        </article>
+        </div>
+      </div>
+    </section>
+
+    <section class="edit-product-view" id="edit-product-view" aria-hidden="true">
+      <form class="edit-product-form" id="edit-product-form">
+        <div class="edit-product-header">
+          <div>
+            <p class="eyebrow">Editar producto</p>
+            <h2 id="edit-product-title">Modificar producto</h2>
+          </div>
+          <button class="edit-close" type="button" id="edit-product-close" aria-label="Cerrar editor">&times;</button>
+        </div>
+
+        <div class="edit-product-grid">
+          <div class="edit-image-panel">
+            <img id="edit-product-preview" src="" alt="Vista previa del producto">
+            <label class="file-drop">
+              Cambiar foto
+              <input id="edit-product-image" type="file" accept="image/*">
+            </label>
+          </div>
+
+          <div class="edit-fields">
+            <label>Nombre<input id="edit-product-name" type="text" required></label>
+            <label>Precio<input id="edit-product-price" type="number" min="0" step="100" required></label>
+            <label>Categor&iacute;a
+              <select id="edit-product-category" required>
+                <option value="frutales">Frutales</option>
+                <option value="arboles-ornamentales">&Aacute;rboles Ornamentales</option>
+                <option value="arbustos">Arbustos</option>
+                <option value="flores">Flores</option>
+              </select>
+            </label>
+            <label>Descripcion<textarea id="edit-product-description" rows="5"></textarea></label>
+            <div class="edit-form-actions">
+              <button class="button primary" type="submit">Guardar cambios</button>
+              <button class="button" type="button" id="edit-product-cancel">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </section>
+
+    <section class="preview-panel" id="preview-panel" aria-hidden="true">
+      <div class="preview-shell">
+        <div class="preview-header">
+          <div>
+            <p class="eyebrow">Previsualizaci&oacute;n</p>
+            <h2>Cat&aacute;logo p&uacute;blico</h2>
+          </div>
+          <a class="edit-close preview-close-link" href="#" id="close-preview" aria-label="Cerrar previsualizaci&oacute;n">&times;</a>
+        </div>
+        <div class="preview-content">
+          <div class="preview-catalog-head">
+            <p class="eyebrow">Vista cliente</p>
+            <h3>Productos disponibles</h3>
+          </div>
+          <div class="preview-grid" id="preview-grid" aria-live="polite">
+            <article class="preview-card">
+              <img src="catalogo-img/limonero-2-m-1.gif" alt="Limonero">
+              <div class="preview-card-body">
+                <h4>Limonero (2 m)</h4>
+                <p>Arbol frutal ideal para jardin, terraza amplia o huerto familiar. Requiere buena luz y riego moderado.</p>
+                <strong>$15.000</strong>
+              </div>
+            </article>
+            <article class="preview-card">
+              <img src="catalogo-img/mandarino-1-5-m-2.gif" alt="Mandarino">
+              <div class="preview-card-body">
+                <h4>Mandarino (1,5 m)</h4>
+                <p>Mandarino de temporada para espacios exteriores con sol directo. Producto activo y disponible para cotizacion.</p>
+                <strong>$12.000</strong>
+              </div>
+            </article>
+            <article class="preview-card">
+              <img src="catalogo-img/romero-30-cm-29.gif" alt="Romero">
+              <div class="preview-card-body">
+                <h4>Romero (30 cm)</h4>
+                <p>Planta aromatica resistente, perfecta para cocina, maceteros y bordes de jardin. Necesita riego bajo y buena luz.</p>
+                <strong>$2.000</strong>
+              </div>
+            </article>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+  <script src="script.js?v=20260914-48"></script>
+</body>
+</html>
