@@ -1,0 +1,2069 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Entre Vinos y Jardines - Pedidos por WhatsApp</title>
+  <style>
+    :root {
+      --cream: #fff3dd;
+      --cream-strong: #f8e2bd;
+      --paper: #fffaf0;
+      --navy: #07345b;
+      --navy-2: #0b4878;
+      --coral: #df5c46;
+      --coral-dark: #b94131;
+      --cheese: #f2b84b;
+      --ink: #14222b;
+      --muted: #766b5c;
+      --line: #ead6b6;
+      --white: #ffffff;
+      --shadow: 0 18px 40px rgba(7, 52, 91, 0.16);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--ink);
+      background:
+        linear-gradient(90deg, rgba(223, 92, 70, 0.08) 1px, transparent 1px),
+        linear-gradient(0deg, rgba(7, 52, 91, 0.06) 1px, transparent 1px),
+        var(--cream);
+      background-size: 34px 34px;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 34px;
+    }
+
+    .auth-screen[hidden],
+    .site-app[hidden],
+    .auth-session[hidden] {
+      display: none;
+    }
+
+    .auth-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+    }
+
+    .auth-card {
+      width: min(440px, 100%);
+      display: grid;
+      gap: 16px;
+      padding: 24px;
+      color: var(--ink);
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .auth-logo {
+      width: 130px;
+      justify-self: center;
+      padding: 8px;
+      background: var(--cream);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+    }
+
+    .auth-eyebrow {
+      color: var(--coral);
+      font-size: 0.78rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+    }
+
+    .auth-card h1 {
+      color: var(--ink);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.1rem, 8vw, 3.2rem);
+      line-height: 0.95;
+      text-align: center;
+      text-shadow: none;
+    }
+
+    .auth-card p {
+      color: var(--muted);
+      font-weight: 800;
+      line-height: 1.45;
+      text-align: center;
+    }
+
+    .auth-actions {
+      display: grid;
+      gap: 10px;
+    }
+
+    .auth-email-form {
+      display: grid;
+      gap: 10px;
+    }
+
+    .auth-email-form label {
+      display: grid;
+      gap: 6px;
+      color: var(--ink);
+      font-weight: 900;
+      text-align: left;
+    }
+
+    .auth-email-form input {
+      width: 100%;
+      min-height: 46px;
+      padding: 0 12px;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      outline: none;
+    }
+
+    .auth-email-form input:focus {
+      border-color: var(--coral);
+      box-shadow: 0 0 0 3px rgba(240, 165, 91, 0.2);
+    }
+
+    .auth-btn {
+      min-height: 48px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      padding: 0 16px;
+      color: var(--ink);
+      background: var(--white);
+      border: 1px solid var(--line);
+      border-radius: 7px;
+      font-weight: 900;
+      box-shadow: none;
+    }
+
+    .auth-btn:hover {
+      transform: translateY(-1px);
+      border-color: var(--coral);
+    }
+
+    .auth-register {
+      color: #18241d;
+      background: var(--coral);
+      border-color: var(--coral);
+    }
+
+    .auth-google {
+      min-height: 54px;
+      color: #3c4043;
+      background: #ffffff;
+      border-color: #dadce0;
+      box-shadow: 0 1px 2px rgba(60, 64, 67, 0.16);
+    }
+
+    .auth-google:hover {
+      background: #ffffff;
+      border-color: #c7cdd4;
+      box-shadow: 0 2px 4px rgba(60, 64, 67, 0.18);
+    }
+
+    .google-wordmark {
+      display: inline-flex;
+      align-items: center;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1;
+    }
+
+    .google-blue { color: #1a73e8; }
+    .google-red { color: #ea4335; }
+    .google-yellow { color: #fbbc04; }
+    .google-green { color: #34a853; }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0 0 0 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .auth-link-btn {
+      min-height: 34px;
+      color: var(--muted);
+      background: transparent;
+      border: 0;
+      font-size: 0.88rem;
+      font-weight: 900;
+      text-decoration: underline;
+      box-shadow: none;
+    }
+
+    .google-mark {
+      width: 28px;
+      height: 28px;
+      display: inline-grid;
+      place-items: center;
+      color: #4285f4;
+      background: #fff;
+      border: 1px solid #dadce0;
+      border-radius: 50%;
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 900;
+    }
+
+    .auth-message {
+      min-height: 18px;
+      color: var(--coral);
+      font-size: 0.86rem;
+      font-weight: 900;
+    }
+
+    h1,
+    h2,
+    h3,
+    p {
+      margin: 0;
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 28px;
+      align-items: center;
+      margin-bottom: 22px;
+      padding: 24px;
+      color: var(--paper);
+      background: var(--navy);
+      border: 4px solid var(--paper);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+      outline: 3px solid var(--coral);
+    }
+
+    .hero::before,
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: -30px;
+      right: -30px;
+      height: 12px;
+      background: var(--coral);
+      opacity: 0.95;
+    }
+
+    .hero::before {
+      top: 0;
+    }
+
+    .hero::after {
+      bottom: 0;
+      background: var(--cheese);
+    }
+
+    .brand {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 10px;
+      color: var(--cheese);
+      font-size: 0.84rem;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow::before,
+    .eyebrow::after {
+      content: "";
+      width: 28px;
+      height: 3px;
+      background: var(--coral);
+      border-radius: 999px;
+    }
+
+    h1 {
+      color: var(--paper);
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(2.4rem, 6vw, 5.3rem);
+      line-height: 0.9;
+      letter-spacing: 0;
+      text-transform: lowercase;
+      text-shadow: 3px 3px 0 var(--coral-dark);
+    }
+
+    .lead {
+      max-width: 680px;
+      margin-top: 14px;
+      color: #ffe9ca;
+      font-size: 1.04rem;
+      line-height: 1.5;
+    }
+
+    .brand-logo {
+      position: relative;
+      z-index: 1;
+      width: min(310px, 28vw);
+      min-width: 190px;
+      border: 5px solid var(--paper);
+      border-radius: 8px;
+      background: var(--cream);
+      box-shadow: 0 14px 28px rgba(0, 0, 0, 0.18);
+      display: block;
+    }
+
+
+    .theme-link {
+      position: absolute;
+      z-index: 3;
+      top: 18px;
+      right: 18px;
+      width: 46px;
+      height: 46px;
+      display: inline-grid;
+      place-items: center;
+      color: var(--navy);
+      background: var(--cheese);
+      border: 3px solid var(--paper);
+      border-radius: 50%;
+      box-shadow: 0 5px 0 var(--coral-dark), 0 10px 20px rgba(0, 0, 0, 0.18);
+      text-decoration: none;
+      transition: transform 0.15s ease, background 0.15s ease;
+    }
+
+    .theme-link:hover {
+      transform: translateY(-1px) rotate(-6deg);
+      background: var(--paper);
+    }
+
+    .theme-link svg {
+      width: 22px;
+      height: 22px;
+      stroke: currentColor;
+      stroke-width: 2.5;
+    }
+
+    .auth-session {
+      position: absolute;
+      z-index: 3;
+      top: 18px;
+      left: 18px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      max-width: min(320px, calc(100% - 92px));
+      padding: 7px 8px 7px 12px;
+      color: var(--ink);
+      background: rgba(244, 247, 236, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 900;
+      box-shadow: 0 8px 18px rgba(0, 0, 0, 0.16);
+    }
+
+    .auth-session span {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .auth-session button {
+      min-height: 28px;
+      padding: 0 10px;
+      color: var(--paper);
+      background: var(--navy);
+      border: 0;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 900;
+      box-shadow: none;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 390px;
+      gap: 22px;
+      align-items: start;
+    }
+
+    .panel {
+      overflow: hidden;
+      background: var(--paper);
+      border: 2px solid var(--navy);
+      border-radius: 8px;
+      box-shadow: var(--shadow);
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      min-height: 66px;
+      padding: 16px 18px;
+      color: var(--paper);
+      background: var(--navy);
+      border-bottom: 5px solid var(--coral);
+    }
+
+    .section-title h2 {
+      font-size: 1rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .menu-note {
+      color: #ffe6bf;
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      padding: 18px;
+    }
+
+    .product {
+      display: grid;
+      grid-template-rows: 70px auto 1fr auto;
+      gap: 13px;
+      min-height: 245px;
+      padding: 14px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .product-heading {
+      height: 70px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      justify-content: flex-start;
+    }
+
+    .product-art {
+      position: relative;
+      overflow: hidden;
+      aspect-ratio: 16 / 9;
+      min-height: 150px;
+      border-radius: 7px;
+      border: 2px solid var(--navy);
+      background:
+        linear-gradient(135deg, rgba(255, 250, 240, 0.88), rgba(255, 250, 240, 0.72)),
+        repeating-linear-gradient(45deg, var(--cream-strong) 0 10px, #ffeccc 10px 20px);
+      background-size: cover;
+      background-position: center;
+    }
+
+    .product h3 {
+      color: var(--navy);
+      font-size: 1.1rem;
+      line-height: 1.25;
+    }
+
+    .description {
+      margin-top: 6px;
+      color: var(--muted);
+      font-size: 0.94rem;
+      line-height: 1.4;
+    }
+
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .price {
+      color: var(--coral-dark);
+      font-size: 1.16rem;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    button {
+      border: 0;
+      border-radius: 7px;
+      min-height: 42px;
+      padding: 0 14px;
+      font: inherit;
+      font-weight: 900;
+      cursor: pointer;
+      transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
+    }
+
+    button:hover {
+      transform: translateY(-1px);
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+      transform: none;
+    }
+
+    .btn-primary {
+      min-width: 118px;
+      color: var(--paper);
+      background: var(--coral);
+      box-shadow: 0 4px 0 var(--coral-dark);
+    }
+
+    .btn-primary:hover {
+      background: var(--coral-dark);
+    }
+
+    .btn-whatsapp {
+      width: 100%;
+      color: var(--paper);
+      background: var(--navy);
+      border: 2px solid var(--navy);
+      box-shadow: 0 5px 0 var(--coral);
+    }
+
+    .btn-whatsapp:hover {
+      color: var(--navy);
+      background: var(--cheese);
+    }
+
+    .btn-danger {
+      min-height: 36px;
+      color: var(--navy);
+      background: var(--cheese);
+      border: 2px solid var(--paper);
+    }
+
+    .cart-body {
+      padding: 18px;
+    }
+
+    .empty {
+      padding: 22px;
+      border: 2px dashed var(--line);
+      border-radius: 8px;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.4;
+      background: var(--white);
+    }
+
+    .cart-list {
+      display: grid;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .cart-item {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      padding: 12px;
+      border: 2px solid var(--line);
+      border-radius: 8px;
+      background: var(--white);
+    }
+
+    .cart-name {
+      color: var(--navy);
+      font-weight: 900;
+      line-height: 1.3;
+    }
+
+    .cart-meta {
+      margin-top: 4px;
+      color: var(--muted);
+      font-size: 0.92rem;
+      line-height: 1.35;
+    }
+
+    .quantity {
+      display: inline-grid;
+      grid-template-columns: 34px 38px 34px;
+      align-items: center;
+      justify-items: center;
+      overflow: hidden;
+      border: 2px solid var(--navy);
+      border-radius: 7px;
+      background: var(--paper);
+    }
+
+    .quantity button {
+      width: 34px;
+      min-height: 34px;
+      padding: 0;
+      border-radius: 0;
+      color: var(--paper);
+      background: var(--navy);
+      font-size: 1rem;
+    }
+
+    .quantity span {
+      color: var(--navy);
+      font-weight: 900;
+    }
+
+    .total-row {
+      display: flex;
+      justify-content: space-between;
+      gap: 18px;
+      align-items: center;
+      padding: 14px 0;
+      margin-top: 4px;
+      border-top: 3px solid var(--navy);
+      color: var(--navy);
+      font-size: 1.16rem;
+      font-weight: 900;
+    }
+
+    form {
+      display: grid;
+      gap: 14px;
+      margin-top: 18px;
+      padding-top: 18px;
+      border-top: 2px solid var(--line);
+    }
+
+    label {
+      display: grid;
+      gap: 7px;
+      color: var(--navy);
+      font-size: 0.92rem;
+      font-weight: 900;
+    }
+
+    input {
+      width: 100%;
+      min-height: 44px;
+      border: 2px solid var(--line);
+      border-radius: 7px;
+      padding: 0 12px;
+      font: inherit;
+      color: var(--ink);
+      background: var(--white);
+      outline: none;
+    }
+
+    input:focus {
+      border-color: var(--coral);
+      box-shadow: 0 0 0 3px rgba(223, 92, 70, 0.18);
+    }
+
+    .message {
+      min-height: 22px;
+      color: var(--coral-dark);
+      font-size: 0.9rem;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+
+    @media (max-width: 920px) {
+      .hero {
+        grid-template-columns: 1fr;
+      }
+
+      .brand-logo {
+        width: min(260px, 78vw);
+        min-width: 0;
+      }
+
+  
+      .layout {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 620px) {
+      main {
+        width: min(100% - 20px, 1180px);
+        padding: 18px 0 28px;
+      }
+
+      .hero {
+        padding: 20px 16px;
+      }
+      .theme-link {
+        top: 12px;
+        right: 12px;
+        width: 42px;
+        height: 42px;
+      }
+
+      .auth-session {
+        position: relative;
+        top: auto;
+        left: auto;
+        max-width: 100%;
+        margin-bottom: 14px;
+        justify-self: start;
+      }
+
+      .product-grid {
+        grid-template-columns: 1fr;
+        padding: 14px;
+      }
+
+      .section-title {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
+      .product-footer {
+        align-items: stretch;
+        flex-direction: column;
+      }
+
+      .btn-primary {
+        width: 100%;
+      }
+
+      .cart-item {
+        grid-template-columns: 1fr;
+      }
+    }
+  
+    /* Estetica oscura inspirada en Don Moises Vivero */
+    :root {
+      --cream: #172019;
+      --cream-strong: #203028;
+      --paper: #223128;
+      --navy: #18241d;
+      --navy-2: #314237;
+      --coral: #f0a55b;
+      --coral-dark: #c87b3c;
+      --cheese: #c8d8b8;
+      --ink: #f4f7ec;
+      --muted: #d0dacb;
+      --line: #4c5d52;
+      --white: #28382f;
+      --shadow: none;
+    }
+
+    body {
+      color: var(--ink);
+      background: #172019;
+    }
+
+    main {
+      width: min(1180px, calc(100% - 24px));
+      padding-top: 24px;
+    }
+
+    .hero,
+    .panel,
+    .product,
+    .cart-item,
+    .empty {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: none;
+    }
+
+    .hero {
+      color: var(--ink);
+      outline: 0;
+    }
+
+    .hero::before,
+    .hero::after {
+      display: none;
+    }
+
+    h1 {
+      color: var(--ink);
+      text-transform: none;
+      text-shadow: none;
+    }
+
+    .eyebrow {
+      color: var(--coral);
+    }
+
+    .eyebrow::before,
+    .eyebrow::after {
+      background: var(--coral);
+    }
+
+    .lead,
+    .menu-note,
+    .description,
+    .business-meta {
+      color: var(--muted);
+    }
+
+    .brand-logo,
+    .product-art {
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: none;
+    }
+
+    .theme-link {
+      color: var(--ink);
+      background: rgba(40, 56, 47, 0.92);
+      border: 1px solid var(--line);
+      border-radius: 4px;
+      box-shadow: none;
+    }
+
+    .section-title {
+      min-height: 68px;
+      color: var(--ink);
+      background: var(--paper);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .product-grid {
+      gap: 18px;
+      padding: 18px;
+    }
+
+    .product {
+      grid-template-rows: 74px auto 1fr auto;
+      gap: 14px;
+      padding: 0 22px 22px;
+      overflow: hidden;
+    }
+
+    .product-heading {
+      height: 74px;
+      padding-top: 20px;
+    }
+
+    .product h3,
+    .section-title h2,
+    label,
+    .total-row,
+    .cart-item strong,
+    .cart-item b {
+      color: var(--ink);
+    }
+
+    .product-badge {
+      color: var(--navy);
+      background: var(--cheese) !important;
+      border-radius: 999px;
+    }
+
+    .product-art {
+      width: calc(100% + 44px);
+      margin: 0 -22px;
+      border-left: 0;
+      border-right: 0;
+      border-radius: 0;
+    }
+
+    .price {
+      color: var(--coral);
+    }
+
+    input,
+    textarea,
+    select {
+      color: var(--ink);
+      background: #1d2a22;
+      border-color: var(--line);
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: rgba(208, 218, 203, 0.72);
+    }
+
+    .btn-primary,
+    .btn-whatsapp,
+    .btn-danger,
+    button {
+      color: var(--ink);
+      background: transparent;
+      border: 1px solid #69786d;
+      border-radius: 4px;
+      box-shadow: none;
+    }
+
+    .btn-primary:hover,
+    .btn-whatsapp:hover,
+    .btn-danger:hover,
+    button:hover {
+      color: var(--ink);
+      background: #314237;
+      border-color: var(--cheese);
+    }
+
+    .cart-name,
+    .cart-meta,
+    .quantity span,
+    .total-row,
+    .total-row span,
+    #cartTotal {
+      color: #f4f7ec;
+    }
+
+    .cart-meta {
+      color: #d0dacb;
+    }
+
+    .quantity {
+      border-color: #69786d;
+      background: #18241d;
+    }
+
+    .quantity button {
+      color: #f4f7ec;
+      background: #223128;
+      border-color: #69786d;
+    }
+
+    .cart-item {
+      background: #223128;
+      border-color: #4c5d52;
+    }
+
+    .location-section {
+      margin-top: 24px;
+      background: #223128;
+      border: 1px solid #4c5d52;
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .location-content {
+      display: grid;
+      grid-template-columns: minmax(260px, 0.72fr) minmax(360px, 1.5fr);
+      gap: 20px;
+      padding: 22px;
+      align-items: stretch;
+    }
+
+    .location-copy {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      color: #f4f7ec;
+    }
+
+    .location-copy p {
+      margin: 0;
+      color: #d0dacb;
+      line-height: 1.55;
+    }
+
+    .location-place {
+      display: grid;
+      gap: 8px;
+      padding: 14px;
+      border: 1px solid #69786d;
+      border-radius: 4px;
+      background: #18241d;
+    }
+
+    .location-place strong {
+      color: #f4f7ec;
+      font-size: 1.05rem;
+    }
+
+    .location-coordinates {
+      color: #f0a55b;
+      font-weight: 900;
+    }
+
+    .map-frame {
+      position: relative;
+      min-height: 460px;
+      border: 1px solid #69786d;
+      border-radius: 4px;
+      overflow: hidden;
+      background: #18241d;
+    }
+
+    .map-frame iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 460px;
+      border: 0;
+      filter: grayscale(0.08) contrast(1.08) saturate(0.9);
+    }
+
+    .map-pin-label {
+      position: absolute;
+      left: 16px;
+      top: 16px;
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 12px;
+      color: #f4f7ec;
+      background: rgba(24, 36, 29, 0.92);
+      border: 1px solid #f0a55b;
+      border-radius: 999px;
+      font-weight: 900;
+      pointer-events: none;
+    }
+
+    .map-pin-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: #f0a55b;
+      box-shadow: 0 0 0 5px rgba(240, 165, 91, 0.22);
+    }
+
+    .map-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .map-link {
+      display: inline-flex;
+      min-height: 42px;
+      align-items: center;
+      justify-content: center;
+      padding: 0 16px;
+      border: 1px solid #69786d;
+      border-radius: 4px;
+      color: #f4f7ec;
+      text-decoration: none;
+      font-weight: 900;
+    }
+
+    .map-link.primary-map {
+      color: #18241d;
+      background: #f0a55b;
+      border-color: #f0a55b;
+    }
+
+    .map-link:hover {
+      border-color: #f0a55b;
+      background: #314237;
+    }
+
+    .map-link.primary-map:hover {
+      color: #f4f7ec;
+      background: #314237;
+    }
+
+    @media (max-width: 820px) {
+      .location-content {
+        grid-template-columns: 1fr;
+      }
+
+      .map-frame,
+      .map-frame iframe {
+        min-height: 360px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="auth-screen" id="authScreen" aria-labelledby="authTitle">
+    <div class="auth-card">
+      <h1 id="authTitle">Comprobando sesion</h1>
+      <p>El acceso unico esta en index.html. Si necesitas iniciar sesion, te llevaremos automaticamente.</p>
+      <p class="auth-message" id="authMessage" role="status"></p>
+    </div>
+  </section>
+
+  <main id="siteApp" class="site-app" hidden>
+    <header class="hero">
+      <a class="theme-link" href="editor-plantas.html" title="Editar colores" aria-label="Editar colores de la pagina">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M12 20h9" />
+          <path d="M16.5 3.5a2.1 2.1 0 0 1 3 3L7 19l-4 1 1-4Z" />
+        </svg>
+      </a>
+      <div class="auth-session" id="authSession" hidden>
+        <span id="authUserName">Cliente Google</span>
+        <button type="button" id="logoutCustomerBtn">Salir</button>
+      </div>
+      <div class="brand">
+        <p class="eyebrow">Naturaleza para tu casa</p>
+        <h1>Entre Vinos y Jardines</h1>
+        <p class="lead">Plantas de interior, suculentas, cactus y maceteros. Arma tu pedido y envialo directo por WhatsApp.</p>
+      </div>
+      <img class="brand-logo" src="logo-entre-vinos-jardines-sobrio.svg" alt="Logo sobrio de Entre Vinos y Jardines">
+    </header>
+
+    <div class="layout">
+      <section class="panel" aria-labelledby="products-title">
+        <div class="section-title">
+          <h2 id="products-title">Catalogo verde</h2>
+          <p class="menu-note">Plantas seleccionadas para interior y terraza</p>
+        </div>
+        <div class="product-grid" id="productList"></div>
+      </section>
+
+      <aside class="panel" aria-labelledby="cart-title">
+        <div class="section-title">
+          <h2 id="cart-title">Tu pedido</h2>
+          <button type="button" class="btn-danger" id="clearCartBtn">Vaciar carrito</button>
+        </div>
+
+        <div class="cart-body">
+          <div id="cartList"></div>
+
+          <div class="total-row">
+            <span>Total</span>
+            <span id="cartTotal">$0</span>
+          </div>
+
+          <form id="orderForm">
+            <label>
+              Nombre
+              <input type="text" id="customerName" autocomplete="name" placeholder="Ej: Camila Perez">
+            </label>
+
+            <label>
+              Direccion
+              <input type="text" id="customerAddress" autocomplete="street-address" placeholder="Ej: Av. Siempre Viva 742">
+            </label>
+
+            <p class="message" id="formMessage" role="alert"></p>
+
+            <button type="submit" class="btn-whatsapp">&iexcl;Cotiza gratis!</button>
+          </form>
+        </div>
+      </aside>
+    </div>
+
+    <section class="location-section" aria-labelledby="location-title">
+      <div class="section-title">
+        <h2 id="location-title">Ubicacion</h2>
+        <p class="menu-note">Entre Vinos y Jardines</p>
+      </div>
+      <div class="location-content">
+        <div class="location-copy">
+          <div class="location-place">
+            <strong>Entre Vinos y Jardines</strong>
+            <p>Ubicacion exacta marcada en el mapa. Abre la ruta para llegar directo desde Google Maps.</p>
+            <p class="location-coordinates">Referencia exacta protegida: usa el marcador del mapa.</p>
+          </div>
+          <div class="map-actions">
+            <a class="map-link primary-map" href="https://www.google.com/maps/search/?api=1&query=-37.367876,-72.294121" target="_blank" rel="noopener">Ver ubicacion exacta</a>
+            <a class="map-link" href="https://www.google.com/maps/dir/?api=1&destination=-37.367876,-72.294121" target="_blank" rel="noopener">Como llegar</a>
+          </div>
+        </div>
+        <div class="map-frame">
+          <div class="map-pin-label"><span class="map-pin-dot"></span> Punto exacto</div>
+          <iframe title="Mapa de Entre Vinos y Jardines" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=-37.367876,-72.294121&z=16&output=embed"></iframe>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const settingsKey = "entreVinosJardinesPublishedSettings";
+    const draftKey = "entreVinosJardinesDraftSettings";
+    const legacyThemeKey = "entreVinosJardinesTheme";
+    const consultationKey = "entreVinosJardinesConsultations";
+
+    const defaultSiteSettings = {
+      business: {
+        eyebrow: "Naturaleza para tu casa",
+        name: "Entre Vinos y Jardines",
+        description: "Plantas de interior, suculentas, cactus y maceteros. Arma tu pedido y envialo directo por WhatsApp.",
+        logo: "logo-entre-vinos-jardines-sobrio.svg",
+        logoAlt: "Logo sobrio de Entre Vinos y Jardines",
+        whatsapp: "56998269427",
+        email: "",
+        address: "",
+        hours: "",
+        showLogo: true,
+        showEmail: false,
+        showAddress: false,
+        showHours: false
+      },
+      header: {
+        showEyebrow: true,
+        showDescription: true,
+        showLogo: true,
+        logoSize: 250,
+        align: "left",
+        backgroundColor: "#24543b",
+        textColor: "#f7f2df",
+        eyebrowColor: "#d8b35a",
+        descriptionColor: "#e7ead7",
+        titleShadowColor: "#5f7f3a",
+        topBorderColor: "#7fb069",
+        bottomBorderColor: "#d8b35a",
+        logoBackground: "#edf4df",
+        logoBorderColor: "#f7f2df"
+      },
+      menu: {
+        title: "Catalogo verde",
+        note: "Plantas seleccionadas para interior y terraza",
+        showNote: true,
+        productAccentColor: "#7fb069"
+      },
+      order: {
+        title: "Tu pedido",
+        clearText: "Vaciar carrito",
+        totalText: "Total",
+        sendText: "\u00a1Cotiza gratis!",
+        emptyCartText: "Todavia no hay productos agregados.",
+        sentText: "Pedido listo para enviar por WhatsApp.",
+        errorText: "Completa los datos obligatorios antes de enviar.",
+        minOrder: 0,
+        deliveryCost: 0,
+        whatsapp: "56998269427",
+        messageTemplate: "Hola Entre Vinos y Jardines, quiero hacer este pedido:",
+        method: "whatsapp",
+        acceptsOrders: true,
+        hours: "",
+        fields: {
+          name: { label: "Nombre", placeholder: "Ej: Camila Perez", required: true, visible: true, type: "text" },
+          phone: { label: "Telefono", placeholder: "Ej: +56 9 1234 5678", required: false, visible: false, type: "tel" },
+          address: { label: "Direccion", placeholder: "Ej: Av. Siempre Viva 742", required: true, visible: true, type: "text" },
+          deliveryType: { label: "Tipo de entrega", placeholder: "Selecciona una opcion", required: false, visible: false, type: "select", options: ["Retiro", "Despacho"] },
+          notes: { label: "Observaciones", placeholder: "Sin cebolla, pago con sencillo, etc.", required: false, visible: false, type: "textarea" },
+          payment: { label: "Metodo de pago", placeholder: "Selecciona una opcion", required: false, visible: false, type: "select", options: ["Efectivo", "Transferencia", "Tarjeta"] }
+        }
+      },
+      theme: {
+        "--cream": "#edf4df",
+        "--cream-strong": "#dce8c8",
+        "--paper": "#fbf8ec",
+        "--navy": "#24543b",
+        "--navy-2": "#3f6f4a",
+        "--coral": "#7fb069",
+        "--coral-dark": "#4f7c45",
+        "--cheese": "#d8b35a",
+        "--ink": "#1f2d24",
+        "--muted": "#69715f",
+        "--line": "#cdd9b8",
+        "--white": "#ffffff",
+        titleFont: "Georgia, 'Times New Roman', serif",
+        bodyFont: "Arial, Helvetica, sans-serif",
+        baseFontSize: 16,
+        cardRadius: 8,
+        buttonRadius: 7,
+        shadowIntensity: 14,
+        maxWidth: 1180
+      },
+      products: [
+        { id: "monstera-deliciosa", shortName: "monstera", name: "Monstera deliciosa", description: "Planta tropical de hojas grandes, ideal para interior con luz indirecta.", price: 12990, image: "planta-monstera.png", category: "Interior", buttonText: "Agregar", available: true, featured: true, visible: true, order: 1 },
+        { id: "suculenta-echeveria", shortName: "suculenta", name: "Suculenta echeveria", description: "Pequena, resistente y facil de cuidar. Perfecta para escritorio o regalo.", price: 3990, image: "planta-suculenta.png", category: "Suculentas", buttonText: "Agregar", available: true, featured: false, visible: true, order: 2 },
+        { id: "cactus-mini", shortName: "cactus", name: "Cactus mini", description: "Cactus decorativo de bajo riego para espacios luminosos.", price: 2990, image: "planta-cactus.png", category: "Cactus", buttonText: "Agregar", available: true, featured: false, visible: true, order: 3 },
+        { id: "macetero-ceramica", shortName: "macetero", name: "Macetero de ceramica", description: "Macetero esmaltado para acompanar plantas pequenas y medianas.", price: 5990, image: "macetero-ceramica.png", category: "Accesorios", buttonText: "Agregar", available: true, featured: false, visible: true, order: 4 }
+      ]
+    };
+
+    function clone(value) { return JSON.parse(JSON.stringify(value)); }
+    function mergeDeep(base, extra) {
+      const output = clone(base);
+      if (!extra || typeof extra !== "object") return output;
+      Object.keys(extra).forEach(key => {
+        if (extra[key] && typeof extra[key] === "object" && !Array.isArray(extra[key]) && output[key] && typeof output[key] === "object" && !Array.isArray(output[key])) {
+          output[key] = mergeDeep(output[key], extra[key]);
+        } else {
+          output[key] = extra[key];
+        }
+      });
+      return output;
+    }
+    function readJson(key) { try { return JSON.parse(localStorage.getItem(key)); } catch (error) { return null; } }
+    function hasValidCoordinates(place) {
+      const lat = Number(place && place.lat);
+      const lng = Number(place && (place.lon ?? place.lng));
+      return Number.isFinite(lat) && Number.isFinite(lng) && lat <= losAngelesBounds.north && lat >= losAngelesBounds.south && lng >= losAngelesBounds.west && lng <= losAngelesBounds.east;
+    }
+    function readConsultationRecords() {
+      const records = readJson(consultationKey);
+      return Array.isArray(records) ? records.filter(record => hasValidCoordinates(record)) : [];
+    }
+    function saveConsultationRecord(data, place) {
+      if (!hasValidCoordinates(place)) return false;
+      const records = readConsultationRecords();
+      const record = {
+        id: `consulta-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+        createdAt: new Date().toISOString(),
+        name: data.name || "",
+        address: data.address || place.value || "",
+        lat: Number(place.lat),
+        lng: Number(place.lon ?? place.lng),
+        source: place.source || "Base real de mapas",
+        total: getCartTotal(),
+        items: cart.map(item => ({
+          id: item.id,
+          name: item.name,
+          price: Number(item.price) || 0,
+          quantity: Number(item.quantity) || 0
+        }))
+      };
+      records.push(record);
+      localStorage.setItem(consultationKey, JSON.stringify(records.slice(-500)));
+      return true;
+    }
+    function getSettingsFromUrl() {
+      const themeParam = new URLSearchParams(window.location.search).get("theme");
+      if (!themeParam) return null;
+      try {
+        const colors = JSON.parse(themeParam);
+        const draft = mergeDeep(defaultSiteSettings, readJson(draftKey) || {});
+        draft.theme = { ...draft.theme, ...colors };
+        localStorage.setItem(draftKey, JSON.stringify(draft));
+        window.history.replaceState(null, "", window.location.pathname);
+        return draft;
+      } catch (error) { return null; }
+    }
+
+    function applyDarkGardenStyle(settings) {
+      const darkTheme = {
+        "--cream": "#172019",
+        "--cream-strong": "#203028",
+        "--paper": "#223128",
+        "--navy": "#18241d",
+        "--navy-2": "#314237",
+        "--coral": "#f0a55b",
+        "--coral-dark": "#c87b3c",
+        "--cheese": "#c8d8b8",
+        "--ink": "#f4f7ec",
+        "--muted": "#d0dacb",
+        "--line": "#4c5d52",
+        "--white": "#28382f",
+        shadowIntensity: 0,
+        cardRadius: 4,
+        buttonRadius: 4
+      };
+      settings.theme = { ...settings.theme, ...darkTheme };
+      settings.header = {
+        ...settings.header,
+        backgroundColor: "#223128",
+        textColor: "#f4f7ec",
+        eyebrowColor: "#f0a55b",
+        descriptionColor: "#d0dacb",
+        titleShadowColor: "#223128",
+        topBorderColor: "#4c5d52",
+        bottomBorderColor: "#4c5d52",
+        logoBackground: "#223128",
+        logoBorderColor: "#4c5d52"
+      };
+      settings.menu = { ...settings.menu, productAccentColor: "#f0a55b" };
+      settings.business = { ...settings.business, whatsapp: "56998269427", logo: "logo-entre-vinos-jardines-sobrio.svg", logoAlt: "Logo sobrio de Entre Vinos y Jardines" };
+      settings.order = { ...settings.order, whatsapp: "56998269427", sendText: "\u00a1Cotiza gratis!" };
+      return settings;
+    }
+    const legacyTheme = readJson(legacyThemeKey);
+    const storedSettings = getSettingsFromUrl() || readJson(settingsKey) || readJson(draftKey);
+    const siteSettings = applyDarkGardenStyle(mergeDeep(defaultSiteSettings, storedSettings || {}));
+    if (legacyTheme && !storedSettings) siteSettings.theme = { ...siteSettings.theme, ...legacyTheme };
+
+    let currentAuthUser = null;
+    function renderAuthState(user = currentAuthUser) {
+      const authScreen = document.getElementById("authScreen");
+      const siteApp = document.getElementById("siteApp");
+      const authSession = document.getElementById("authSession");
+      const authUserName = document.getElementById("authUserName");
+      const isLoggedIn = !!user;
+      if (authScreen) authScreen.hidden = isLoggedIn;
+      if (siteApp) siteApp.hidden = !isLoggedIn;
+      if (authSession) authSession.hidden = !isLoggedIn;
+      if (authUserName) authUserName.textContent = user ? (user.displayName || user.email || "Cliente") : "";
+    }
+    function setCustomerAuthUser(user) {
+      currentAuthUser = user || null;
+      renderAuthState(currentAuthUser);
+    }
+    function logoutCustomer() {
+      if (window.firebaseLogout) window.firebaseLogout();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+    window.setCustomerAuthUser = setCustomerAuthUser;
+
+    let cart = [];
+    let selectedDeliveryAddress = "";
+    let selectedDeliveryPlace = null;
+    let highlightedAddressIndex = 0;
+    let addressAutocompleteBound = false;
+    let remoteAddressSuggestions = [];
+    let remoteAddressLoading = false;
+    let remoteAddressQuery = "";
+    let remoteAddressTimer = null;
+    let remoteAddressRequestId = 0;
+    let remoteAddressController = null;
+    let geocoderUnavailable = false;
+    const remoteAddressDelay = 160;
+    const geocodeTimeoutMs = 1600;
+    const geocodeCache = new Map();
+    const geocodeEndpoint = "https://nominatim.openstreetmap.org/search";
+    const losAngelesBounds = { north: -37.25, south: -37.68, west: -72.68, east: -72.04 };
+    const productList = document.getElementById("productList");
+    const cartList = document.getElementById("cartList");
+    const cartTotal = document.getElementById("cartTotal");
+    const clearCartBtn = document.getElementById("clearCartBtn");
+    const orderForm = document.getElementById("orderForm");
+
+    const seededDeliveryAddresses = [
+      "Av. Alemania 742, Los Angeles",
+      "Av. Alemania 1010, Los Angeles",
+      "Colo Colo 521, Los Angeles",
+      "Villagran 980, Los Angeles",
+      "Mendoza 315, Los Angeles",
+      "Ercilla 450, Los Angeles",
+      "O'Higgins 620, Los Angeles",
+      "Almagro 360, Los Angeles",
+      "Ricardo Vicuna 840, Los Angeles",
+      "Avenida Las Industrias 1250, Los Angeles",
+      "Camino Antuco km 2, Los Angeles",
+      "Camino Santa Barbara km 3, Los Angeles",
+      "Sector Sor Vicenta, Los Angeles",
+      "Villa Galilea, Los Angeles",
+      "Jardines del Sur, Los Angeles",
+      "Paillihue, Los Angeles",
+      "Villa Espana, Los Angeles",
+      "Parque Lauquen, Los Angeles"
+    ];
+    const addressDatabase = [
+      { name: "Av. Alemania", aliases: ["avenida alemania", "av alemania", "alemania"], kind: "street" },
+      { name: "Colo Colo", aliases: ["calle colo colo", "colo-colo"], kind: "street" },
+      { name: "Villagran", aliases: ["calle villagran", "villagran"], kind: "street" },
+      { name: "Mendoza", aliases: ["calle mendoza"], kind: "street" },
+      { name: "Ercilla", aliases: ["calle ercilla"], kind: "street" },
+      { name: "O'Higgins", aliases: ["ohiggins", "bernardo ohiggins", "o higgins"], kind: "street" },
+      { name: "Almagro", aliases: ["calle almagro"], kind: "street" },
+      { name: "Ricardo Vicuna", aliases: ["ricardo vicuna", "ricardo vicuna", "vicuna", "vicuna mackenna"], kind: "street" },
+      { name: "Avenida Las Industrias", aliases: ["av las industrias", "las industrias", "avenida industrias"], kind: "street" },
+      { name: "Avenida Padre Hurtado", aliases: ["av padre hurtado", "padre hurtado"], kind: "street" },
+      { name: "Avenida Oriente", aliases: ["av oriente", "oriente"], kind: "street" },
+      { name: "Avenida Poniente", aliases: ["av poniente", "poniente"], kind: "street" },
+      { name: "Gabriela Mistral", aliases: ["av gabriela mistral", "gabriela mistral"], kind: "street" },
+      { name: "Los Carrera", aliases: ["calle los carrera", "los carrera"], kind: "street" },
+      { name: "Balmaceda", aliases: ["calle balmaceda"], kind: "street" },
+      { name: "Tucapel", aliases: ["calle tucapel"], kind: "street" },
+      { name: "Rengo", aliases: ["calle rengo"], kind: "street" },
+      { name: "Caupolican", aliases: ["calle caupolican", "caupolican"], kind: "street" },
+      { name: "Lautaro", aliases: ["calle lautaro"], kind: "street" },
+      { name: "Freire", aliases: ["calle freire"], kind: "street" },
+      { name: "Valdivia", aliases: ["calle valdivia"], kind: "street" },
+      { name: "Lientur", aliases: ["calle lientur"], kind: "street" },
+      { name: "Manuel Rodriguez", aliases: ["manuel rodriguez", "rodriguez"], kind: "street" },
+      { name: "Marconi", aliases: ["calle marconi"], kind: "street" },
+      { name: "Camino Antuco", aliases: ["camino a antuco", "antuco", "ruta antuco"], kind: "road" },
+      { name: "Camino Santa Barbara", aliases: ["camino a santa barbara", "santa barbara", "ruta santa barbara"], kind: "road" },
+      { name: "Camino Nacimiento", aliases: ["camino a nacimiento", "nacimiento"], kind: "road" },
+      { name: "Ruta Q-45", aliases: ["q45", "q 45", "ruta q45"], kind: "road" },
+      { name: "Ruta Q-61", aliases: ["q61", "q 61", "ruta q61"], kind: "road" },
+      { name: "Paillihue", aliases: ["sector paillihue"], kind: "sector" },
+      { name: "Sector Sor Vicenta", aliases: ["sor vicenta"], kind: "sector" },
+      { name: "Villa Galilea", aliases: ["galilea"], kind: "sector" },
+      { name: "Jardines del Sur", aliases: ["villa jardines del sur", "jardines sur"], kind: "sector" },
+      { name: "Villa Espana", aliases: ["villa espana", "espana"], kind: "sector" },
+      { name: "Parque Lauquen", aliases: ["lauquen"], kind: "sector" },
+      { name: "Villa Genesis", aliases: ["genesis"], kind: "sector" },
+      { name: "Villa Las Americas", aliases: ["las americas"], kind: "sector" },
+      { name: "Orompello", aliases: ["poblacion orompello", "sector orompello"], kind: "sector" },
+      { name: "21 de Mayo", aliases: ["poblacion 21 de mayo", "veintiuno de mayo"], kind: "sector" },
+      { name: "El Avellano", aliases: ["sector el avellano", "avellano"], kind: "sector" },
+      { name: "Duqueco", aliases: ["sector duqueco"], kind: "sector" },
+      { name: "Santa Fe", aliases: ["sector santa fe"], kind: "sector" }
+    ];
+    const allowedDeliveryAddresses = [...seededDeliveryAddresses];
+
+    const moneyFormatter = new Intl.NumberFormat("es-CL", { style: "currency", currency: "CLP", maximumFractionDigits: 0 });
+    function formatMoney(value) { return moneyFormatter.format(Number(value) || 0); }
+    function css(value) { return String(value ?? "").replace(/[<>&"]/g, char => ({"<":"&lt;", ">":"&gt;", "&":"&amp;", "\"":"&quot;"}[char])); }
+
+    function injectCompatibilityStyles() {
+      const style = document.createElement("style");
+      style.textContent = `
+        select, textarea { width: 100%; min-height: 44px; border: 2px solid var(--line); border-radius: var(--button-radius, 7px); padding: 0 12px; font: inherit; color: var(--ink); background: var(--white); outline: none; }
+        .address-help { color: #d0dacb; font-size: .8rem; font-weight: 700; line-height: 1.35; }
+        .address-picker { position: relative; display: grid; gap: 7px; color: var(--ink); font-size: .92rem; font-weight: 900; }
+        .address-label { display: block; color: inherit; font: inherit; }
+        .address-suggestions { display: none; position: absolute; left: 0; right: 0; top: 72px; z-index: 30; max-height: 230px; overflow: auto; padding: 7px; background: var(--white); border: 2px solid var(--coral); border-radius: 0 0 var(--button-radius, 7px) var(--button-radius, 7px); box-shadow: 0 16px 34px rgba(0,0,0,.26); }
+        .address-suggestions.is-open { display: grid; gap: 5px; }
+        .address-option { width: 100%; min-height: 42px; display:grid; gap:2px; padding: 8px 10px; color: var(--ink); background: transparent; border: 0; box-shadow: none; text-align: left; font: inherit; font-weight: 800; }
+        .address-option:hover, .address-option.is-active { color: #18241d; background: var(--coral); transform: none; }
+        .address-option small { color: var(--muted); font-size:.72rem; font-weight:900; text-transform:uppercase; }
+        .address-option:hover small, .address-option.is-active small { color:#18241d; }
+        .address-empty { padding: 10px; color: var(--muted); font-size: .86rem; font-weight: 800; line-height: 1.35; }
+        .address-complete-hint { min-height: 17px; color: var(--coral); font-size: .8rem; font-weight: 900; line-height: 1.35; }
+        .address-warning { min-height: 17px; color: #f0a55b; font-size: .8rem; font-weight: 900; line-height: 1.35; }
+        textarea { min-height: 86px; padding-top: 10px; resize: vertical; }
+        select:focus, textarea:focus { border-color: var(--coral); box-shadow: 0 0 0 3px rgba(223, 92, 70, 0.18); }
+        .business-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; margin-top: 12px; color: #ffe9ca; font-size: .92rem; font-weight: 700; }
+        .product.is-unavailable { opacity: .62; }
+        .product-badge { display:inline-flex; width:max-content; margin-top:8px; padding:4px 8px; color:var(--paper); background:var(--product-accent, var(--coral)); border-radius:999px; font-size:.72rem; font-weight:900; text-transform:uppercase; }
+        .hero { color:var(--header-text, var(--paper)); background:var(--header-bg, var(--navy)); border-color:var(--header-logo-border, var(--paper)); outline-color:var(--header-top-border, var(--coral)); }
+        .hero::before { background:var(--header-top-border, var(--coral)); }
+        .hero::after { background:var(--header-bottom-border, var(--cheese)); }
+        .eyebrow { color:var(--header-eyebrow, var(--cheese)); }
+        h1 { color:var(--header-text, var(--paper)); text-shadow:3px 3px 0 var(--header-title-shadow, var(--coral-dark)); }
+        .lead { color:var(--header-description, #ffe9ca); }
+        .brand-logo { background:var(--header-logo-bg, var(--cream)); border-color:var(--header-logo-border, var(--paper)); }
+      `;
+      document.head.appendChild(style);
+    }
+
+    function applyTheme() {
+      Object.entries(siteSettings.theme).forEach(([property, value]) => {
+        if (property.startsWith("--") && /^#[0-9a-fA-F]{6}$/.test(value)) document.documentElement.style.setProperty(property, value);
+      });
+      document.documentElement.style.setProperty("--shadow", `0 18px 40px rgba(7, 52, 91, ${Math.max(0, Math.min(40, Number(siteSettings.theme.shadowIntensity) || 16)) / 100})`);
+      document.documentElement.style.setProperty("--button-radius", `${Number(siteSettings.theme.buttonRadius) || 7}px`);
+      document.documentElement.style.setProperty("--header-bg", siteSettings.header.backgroundColor || siteSettings.theme["--navy"]);
+      document.documentElement.style.setProperty("--header-text", siteSettings.header.textColor || siteSettings.theme["--paper"]);
+      document.documentElement.style.setProperty("--header-eyebrow", siteSettings.header.eyebrowColor || siteSettings.theme["--cheese"]);
+      document.documentElement.style.setProperty("--header-description", siteSettings.header.descriptionColor || "#ffe9ca");
+      document.documentElement.style.setProperty("--header-title-shadow", siteSettings.header.titleShadowColor || siteSettings.theme["--coral-dark"]);
+      document.documentElement.style.setProperty("--header-top-border", siteSettings.header.topBorderColor || siteSettings.theme["--coral"]);
+      document.documentElement.style.setProperty("--header-bottom-border", siteSettings.header.bottomBorderColor || siteSettings.theme["--cheese"]);
+      document.documentElement.style.setProperty("--header-logo-bg", siteSettings.header.logoBackground || siteSettings.theme["--cream"]);
+      document.documentElement.style.setProperty("--header-logo-border", siteSettings.header.logoBorderColor || siteSettings.theme["--paper"]);
+      document.documentElement.style.setProperty("--product-accent", siteSettings.menu.productAccentColor || siteSettings.theme["--coral"]);
+      document.body.style.fontFamily = siteSettings.theme.bodyFont;
+      document.body.style.fontSize = `${Number(siteSettings.theme.baseFontSize) || 16}px`;
+      document.querySelector("main").style.width = `min(${Number(siteSettings.theme.maxWidth) || 1180}px, calc(100% - 32px))`;
+      document.querySelectorAll("h1").forEach(item => item.style.fontFamily = siteSettings.theme.titleFont);
+      document.querySelectorAll(".panel,.product,.cart-item,.empty,.brand-logo").forEach(item => item.style.borderRadius = `${Number(siteSettings.theme.cardRadius) || 8}px`);
+      document.querySelectorAll("button").forEach(item => item.style.borderRadius = `${Number(siteSettings.theme.buttonRadius) || 7}px`);
+    }
+
+    function renderBusiness() {
+      document.title = `${siteSettings.business.name} - Pedidos por WhatsApp`;
+      document.querySelector(".eyebrow").textContent = siteSettings.business.eyebrow;
+      document.querySelector(".eyebrow").style.display = siteSettings.header.showEyebrow ? "inline-flex" : "none";
+      document.querySelector("h1").textContent = siteSettings.business.name;
+      document.querySelector(".lead").textContent = siteSettings.business.description;
+      document.querySelector(".lead").style.display = siteSettings.header.showDescription ? "block" : "none";
+      const logo = document.querySelector(".brand-logo");
+      logo.src = siteSettings.business.logo || "";
+      logo.alt = siteSettings.business.logoAlt || siteSettings.business.name;
+      logo.style.display = siteSettings.header.showLogo && siteSettings.business.showLogo ? "block" : "none";
+      logo.style.width = `min(${Number(siteSettings.header.logoSize) || 310}px, 28vw)`;
+      document.querySelector(".hero").style.textAlign = siteSettings.header.align;
+      document.querySelector(".section-title h2").textContent = siteSettings.menu.title;
+      const note = document.querySelector(".menu-note");
+      note.textContent = siteSettings.menu.note;
+      note.style.display = siteSettings.menu.showNote ? "block" : "none";
+      const cartTitle = document.querySelector("#cart-title");
+      cartTitle.textContent = siteSettings.order.title;
+      clearCartBtn.textContent = siteSettings.order.clearText;
+      const metaItems = [];
+      if (siteSettings.business.showAddress && siteSettings.business.address) metaItems.push(siteSettings.business.address);
+      if (siteSettings.business.showHours && siteSettings.business.hours) metaItems.push(siteSettings.business.hours);
+      if (siteSettings.business.showEmail && siteSettings.business.email) metaItems.push(siteSettings.business.email);
+      let meta = document.querySelector(".business-meta");
+      if (!meta) { meta = document.createElement("div"); meta.className = "business-meta"; document.querySelector(".brand").appendChild(meta); }
+      meta.innerHTML = metaItems.map(item => `<span>${css(item)}</span>`).join("");
+    }
+
+    function visibleProducts() {
+      return siteSettings.products.filter(product => product.visible !== false).sort((a,b) => (Number(a.order)||0) - (Number(b.order)||0));
+    }
+    function renderProducts() {
+      productList.innerHTML = visibleProducts().map(product => `
+        <article class="product${product.available ? "" : " is-unavailable"}">
+          <div class="product-heading">
+            <h3>${css(product.name)}</h3>
+            ${product.featured ? `<span class="product-badge" style="background:${css(siteSettings.menu.productAccentColor || siteSettings.theme['--coral'])}">Destacado</span>` : ""}
+          </div>
+          <div class="product-art" aria-label="Foto de ${css(product.name)}" style="${product.image ? `background-image:url('${css(product.image)}');background-size:cover;background-position:center;` : ""}"></div>
+          <p class="description">${css(product.description)}</p>
+          <div class="product-footer">
+            <p class="price">${formatMoney(product.price)}</p>
+            <button type="button" class="btn-primary" onclick="addToCart('${css(product.id)}')" ${product.available ? "" : "disabled"}>${product.available ? css(product.buttonText || "Agregar") : "Agotado"}</button>
+          </div>
+        </article>`).join("");
+    }
+
+    function renderOrderForm() {
+      const fields = siteSettings.order.fields;
+      const fieldHtml = Object.entries(fields).filter(([, field]) => field.visible).map(([key, field]) => {
+        const required = field.required ? "required" : "";
+        if (field.type === "textarea") return `<label>${css(field.label)}<textarea id="field-${key}" data-field="${key}" placeholder="${css(field.placeholder)}" ${required}></textarea></label>`;
+        if (field.type === "select") return `<label>${css(field.label)}<select id="field-${key}" data-field="${key}" ${required}><option value="">${css(field.placeholder)}</option>${(field.options||[]).map(opt=>`<option>${css(opt)}</option>`).join("")}</select></label>`;
+        if (key === "address") return `<div class="address-picker"><label class="address-label" for="field-${key}">${css(field.label)}</label><input type="text" id="field-${key}" data-field="${key}" data-address-input autocomplete="off" placeholder="${css(field.placeholder)}" aria-autocomplete="list" aria-controls="addressSuggestions" aria-expanded="false" ${required}><div class="address-suggestions" id="addressSuggestions" role="listbox"></div><small class="address-help">Escribe calle y numero; las sugerencias aparecen al instante y el mapa las confirma en segundo plano.</small><small class="address-complete-hint" id="addressCompleteHint" aria-live="polite"></small><small class="address-warning" id="addressWarning" aria-live="polite"></small></div>`;
+        return `<label>${css(field.label)}<input type="${field.type || "text"}" id="field-${key}" data-field="${key}" placeholder="${css(field.placeholder)}" autocomplete="${key === "name" ? "name" : key === "address" ? "street-address" : "off"}" ${required}></label>`;
+      }).join("");
+      orderForm.innerHTML = `${fieldHtml}<p class="message" id="formMessage" role="alert"></p><button type="submit" class="btn-whatsapp">${css(siteSettings.order.sendText)}</button>`;
+      document.querySelector(".total-row span:first-child").textContent = siteSettings.order.totalText;
+      setupAddressAutocomplete();
+    }
+
+    function normalizeAddress(value) {
+      return String(value || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/\u00f1/g, "n")
+        .replace(/[^a-z0-9#\s]/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+    function compactAddress(value) {
+      return normalizeAddress(value).replace(/\s+/g, "");
+    }
+    function addressCore(value) {
+      return normalizeAddress(value).replace(/\blos angeles\b/g, "").replace(/\s+/g, " ").trim();
+    }
+    function sameAddress(a, b) {
+      const left = normalizeAddress(a), right = normalizeAddress(b);
+      const leftCore = addressCore(a), rightCore = addressCore(b);
+      return left === right || compactAddress(left) === compactAddress(right) || compactAddress(leftCore) === compactAddress(rightCore);
+    }
+    function uniqueAddresses(addresses) {
+      const seen = new Set();
+      return addresses.filter(address => {
+        const key = compactAddress(address);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+    function uniqueSuggestions(items) {
+      const seen = new Set();
+      return items.filter(item => {
+        const key = compactAddress(item.value);
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+    }
+    function extractAddressDetail(query) {
+      const search = normalizeAddress(query);
+      const km = search.match(/\bkm\s*(\d{1,4}[a-z]?)\b/);
+      if (km) return { kind: "km", value: km[1] };
+      const numbered = search.match(/\b(?:n|nro|numero|num|#)\s*(\d{1,5}[a-z]?)\b/) || search.match(/\b(\d{1,5}[a-z]?)\b/);
+      return numbered ? { kind: "number", value: numbered[1] } : null;
+    }
+    function placeMatchesQuery(place, search) {
+      if (!search) return true;
+      const compactSearch = compactAddress(search);
+      return [place.name, ...(place.aliases || [])].some(label => {
+        const normalized = normalizeAddress(label);
+        const compact = compactAddress(label);
+        return normalized.includes(search) || search.includes(normalized) || compact.includes(compactSearch) || compactSearch.includes(compact);
+      });
+    }
+    function formatDatabaseAddress(place, query) {
+      const detail = extractAddressDetail(query);
+      const city = place.city || "Los Angeles";
+      if (place.kind === "sector") return `${place.name}, ${city}`;
+      if (place.kind === "road" && detail) return `${place.name} km ${detail.value}, ${city}`;
+      if (detail) return `${place.name} ${detail.value}, ${city}`;
+      return `${place.name}, ${city}`;
+    }
+    function localAddressMatches(query) {
+      const search = normalizeAddress(query);
+      const compactSearch = compactAddress(search);
+      const generated = addressDatabase
+        .filter(place => placeMatchesQuery(place, search))
+        .map(place => formatDatabaseAddress(place, query));
+      const seeded = seededDeliveryAddresses.filter(address => {
+        if (!search) return true;
+        return normalizeAddress(address).includes(search) || compactAddress(address).includes(compactSearch) || addressCore(address).includes(addressCore(search));
+      });
+      return uniqueAddresses([...generated, ...seeded, ...allowedDeliveryAddresses]).slice(0, 9);
+    }
+    function resolveDeliveryAddress(value) {
+      const typed = String(value || "").trim();
+      if (!typed) return "";
+      const direct = localAddressMatches(typed).find(address => sameAddress(address, typed));
+      if (direct) return direct;
+      const search = normalizeAddress(typed);
+      const detail = extractAddressDetail(typed);
+      const place = addressDatabase.find(item => placeMatchesQuery(item, search));
+      if (place && (detail || place.kind === "sector")) return formatDatabaseAddress(place, typed);
+      return "";
+    }
+    function localAddressSuggestions(query) {
+      return localAddressMatches(query).map(value => ({ value, label: value, verified: false, source: "Respaldo local" }));
+    }
+    function isNearLosAngeles(result) {
+      const lat = Number(result.lat), lon = Number(result.lon);
+      return Number.isFinite(lat) && Number.isFinite(lon) && lat <= losAngelesBounds.north && lat >= losAngelesBounds.south && lon >= losAngelesBounds.west && lon <= losAngelesBounds.east;
+    }
+    function formatRealAddress(result, query) {
+      const data = result.address || {};
+      const detail = extractAddressDetail(query);
+      const city = data.city || data.town || data.municipality || data.county || "Los Angeles";
+      const road = data.road || data.pedestrian || data.residential || data.footway || data.neighbourhood || data.suburb || result.name;
+      const typedNumber = detail && detail.kind === "number" ? detail.value : "";
+      const number = data.house_number || typedNumber;
+      if (road && number) return `${road} ${number}, ${city}`;
+      if (road && detail && detail.kind === "km") return `${road} km ${detail.value}, ${city}`;
+      if (road) return `${road}, ${city}`;
+      return String(result.display_name || query).split(",").slice(0, 4).join(",").trim();
+    }
+    function realResultToSuggestion(result, query) {
+      const value = formatRealAddress(result, query);
+      return { value, label: value, verified: true, source: "Base real de mapas", lat: result.lat, lon: result.lon, raw: result };
+    }
+    async function queryRealAddressDatabase(query, limit = 7, externalSignal = null) {
+      const typed = String(query || "").trim();
+      if (typed.length < 3 || !window.fetch) return [];
+      const cacheKey = `${compactAddress(typed)}:${limit}`;
+      if (geocodeCache.has(cacheKey)) return geocodeCache.get(cacheKey);
+      const params = new URLSearchParams({
+        format: "jsonv2",
+        addressdetails: "1",
+        limit: String(limit),
+        countrycodes: "cl",
+        bounded: "1",
+        viewbox: "-72.68,-37.25,-72.04,-37.68",
+        "accept-language": "es",
+        q: `${typed}, Los Angeles, Biobio, Chile`
+      });
+      let timeoutId = null;
+      let controller = null;
+      let signal = externalSignal;
+      if (!signal && typeof AbortController !== "undefined") {
+        controller = new AbortController();
+        signal = controller.signal;
+        timeoutId = setTimeout(() => controller.abort(), geocodeTimeoutMs);
+      }
+      try {
+        const response = await fetch(`${geocodeEndpoint}?${params.toString()}`, { headers: { Accept: "application/json" }, signal });
+        if (!response.ok) throw new Error("No se pudo consultar el mapa");
+        const results = await response.json();
+        geocoderUnavailable = false;
+        const suggestions = uniqueSuggestions((Array.isArray(results) ? results : [])
+          .filter(isNearLosAngeles)
+          .map(result => realResultToSuggestion(result, typed)));
+        geocodeCache.set(cacheKey, suggestions);
+        return suggestions;
+      } catch (error) {
+        if (error && error.name !== "AbortError") geocoderUnavailable = true;
+        return [];
+      } finally {
+        if (timeoutId) clearTimeout(timeoutId);
+      }
+    }
+    function getAddressOptions(query) {
+      const remote = remoteAddressQuery === String(query || "").trim() ? remoteAddressSuggestions : [];
+      return uniqueSuggestions([...remote, ...localAddressSuggestions(query)]).slice(0, 10);
+    }
+    function updateAddressCompletionHint(input, options = getAddressOptions(input ? input.value : "")) {
+      const hint = document.getElementById("addressCompleteHint");
+      if (!hint || !input) return;
+      const typed = input.value.trim();
+      const best = options[0];
+      hint.textContent = typed && best && !sameAddress(best.value, typed) ? `Autocompletar: ${best.value}` : "";
+    }
+    function completeBestAddress(input) {
+      const options = getAddressOptions(input ? input.value : "");
+      if (!input || !options.length) return false;
+      setAddressSelection(input, options[highlightedAddressIndex] || options[0]);
+      return true;
+    }    function closeAddressSuggestions(input) {
+      const list = document.getElementById("addressSuggestions");
+      if (list) { list.classList.remove("is-open"); list.innerHTML = ""; }
+      highlightedAddressIndex = 0;
+      if (input) input.setAttribute("aria-expanded", "false");
+    }
+    async function confirmSelectedAddressInBackground(input, place) {
+      if (!input || !place || place.verified) return;
+      const warning = document.getElementById("addressWarning");
+      if (warning) warning.textContent = "Confirmando direccion en mapa...";
+      const matches = await queryRealAddressDatabase(place.value, 5);
+      const confirmed = matches.find(item => sameAddress(item.value, place.value)) || matches[0];
+      if (!confirmed || input.value !== place.value) {
+        if (warning && input.value === place.value) warning.textContent = "Lista para enviar; se confirmara al finalizar.";
+        return;
+      }
+      selectedDeliveryPlace = confirmed;
+      selectedDeliveryAddress = confirmed.value;
+      input.value = confirmed.value;
+      input.dataset.selectedAddress = confirmed.value;
+      input.dataset.verifiedAddress = "true";
+      if (warning) warning.textContent = "Direccion validada en mapa.";
+    }    function setAddressSelection(input, suggestion) {
+      const place = typeof suggestion === "string" ? { value: suggestion, label: suggestion, verified: false, source: "Respaldo local" } : suggestion;
+      selectedDeliveryAddress = place.value;
+      selectedDeliveryPlace = place;
+      input.value = place.value;
+      input.dataset.selectedAddress = place.value;
+      input.dataset.verifiedAddress = place.verified ? "true" : "false";
+      const warning = document.getElementById("addressWarning");
+      const hint = document.getElementById("addressCompleteHint");
+      if (hint) hint.textContent = "";
+      if (warning) warning.textContent = place.verified ? "Direccion validada en mapa." : "Confirmando direccion en mapa...";
+      closeAddressSuggestions(input);
+      confirmSelectedAddressInBackground(input, place);
+    }
+    function renderAddressSuggestions(input) {
+      const list = document.getElementById("addressSuggestions");
+      if (!input || !list) return;
+      const options = getAddressOptions(input.value);
+      input.setAttribute("aria-expanded", "true");
+      list.classList.add("is-open");
+      if (!options.length && remoteAddressLoading) {
+        updateAddressCompletionHint(input, options);
+        list.innerHTML = `<div class="address-empty">Buscando en base real de mapas...</div>`;
+        return;
+      }
+      if (!options.length) {
+        updateAddressCompletionHint(input, options);
+        list.innerHTML = `<div class="address-empty">No hay coincidencias. Prueba con calle, numero, villa, sector o camino de Los Angeles.</div>`;
+        return;
+      }
+      if (highlightedAddressIndex < 0 || highlightedAddressIndex >= options.length) highlightedAddressIndex = 0;
+      updateAddressCompletionHint(input, options);
+      list.innerHTML = options.map((option, index) => `<button type="button" class="address-option${index === highlightedAddressIndex ? " is-active" : ""}" role="option" aria-selected="${index === highlightedAddressIndex ? "true" : "false"}" data-address-index="${index}"><strong>${css(option.label)}</strong>${option.verified ? `<small>Validada en mapa</small>` : ""}</button>`).join("") + (remoteAddressLoading ? `<div class="address-empty">Confirmando con mapa...</div>` : "");
+      list.querySelectorAll("[data-address-index]").forEach(button => {
+        button.addEventListener("mousedown", event => event.preventDefault());
+        button.addEventListener("click", () => setAddressSelection(input, options[Number(button.dataset.addressIndex)]));
+      });
+    }
+    function queueRemoteAddressLookup(input) {
+      if (!input) return;
+      const query = input.value.trim();
+      clearTimeout(remoteAddressTimer);
+      if (remoteAddressController) remoteAddressController.abort();
+      if (query.length < 3) {
+        remoteAddressSuggestions = [];
+        remoteAddressQuery = "";
+        remoteAddressLoading = false;
+        updateAddressCompletionHint(input);
+        renderAddressSuggestions(input);
+        return;
+      }
+      remoteAddressLoading = true;
+      remoteAddressQuery = query;
+      updateAddressCompletionHint(input);
+      renderAddressSuggestions(input);
+      const requestId = ++remoteAddressRequestId;
+      remoteAddressTimer = setTimeout(async () => {
+        remoteAddressController = typeof AbortController !== "undefined" ? new AbortController() : null;
+        const suggestions = await queryRealAddressDatabase(query, 7, remoteAddressController ? remoteAddressController.signal : null);
+        if (requestId !== remoteAddressRequestId) return;
+        remoteAddressSuggestions = suggestions;
+        remoteAddressLoading = false;
+        remoteAddressQuery = query;
+        remoteAddressController = null;
+        if (document.activeElement === input) renderAddressSuggestions(input);
+      }, remoteAddressDelay);
+    }
+    async function validateDeliveryAddress(value) {
+      const typed = String(value || "").trim();
+      if (!typed) return null;
+      if (selectedDeliveryPlace && sameAddress(selectedDeliveryPlace.value, typed) && selectedDeliveryPlace.verified) return selectedDeliveryPlace;
+      const realMatches = await queryRealAddressDatabase(typed, 5);
+      const exact = realMatches.find(place => sameAddress(place.value, typed));
+      if (exact) return exact;
+      if (realMatches.length) return realMatches[0];
+      const fallback = resolveDeliveryAddress(typed);
+      return fallback && geocoderUnavailable ? { value: fallback, label: fallback, verified: false, source: "Respaldo local" } : null;
+    }
+    function setupAddressAutocomplete() {
+      const input = document.querySelector("[data-address-input]");
+      if (!input) return;
+      selectedDeliveryAddress = resolveDeliveryAddress(input.value);
+      selectedDeliveryPlace = selectedDeliveryAddress ? { value: selectedDeliveryAddress, label: selectedDeliveryAddress, verified: false, source: "Respaldo local" } : null;
+      input.dataset.selectedAddress = selectedDeliveryAddress;
+      input.dataset.verifiedAddress = "false";
+      input.addEventListener("focus", () => { renderAddressSuggestions(input); queueRemoteAddressLookup(input); });
+      input.addEventListener("input", () => {
+        selectedDeliveryAddress = "";
+        selectedDeliveryPlace = null;
+        input.dataset.selectedAddress = "";
+        input.dataset.verifiedAddress = "false";
+        highlightedAddressIndex = 0;
+        const warning = document.getElementById("addressWarning");
+        if (warning) warning.textContent = "";
+        renderAddressSuggestions(input);
+        queueRemoteAddressLookup(input);
+      });
+      input.addEventListener("keydown", event => {
+        const options = getAddressOptions(input.value);
+        const list = document.getElementById("addressSuggestions");
+        const isOpen = list && list.classList.contains("is-open");
+        if ((event.key === "ArrowDown" || event.key === "ArrowUp") && options.length) {
+          event.preventDefault();
+          highlightedAddressIndex = event.key === "ArrowDown" ? (highlightedAddressIndex + 1) % options.length : (highlightedAddressIndex - 1 + options.length) % options.length;
+          renderAddressSuggestions(input);
+        }
+        if ((event.key === "Enter" || event.key === "Tab" || event.key === "ArrowRight") && isOpen && options.length) {
+          event.preventDefault();
+          completeBestAddress(input);
+        }
+        if (event.key === "Escape") closeAddressSuggestions(input);
+      });
+      input.addEventListener("blur", () => {
+        setTimeout(() => {
+          const resolved = resolveDeliveryAddress(input.value);
+          if (resolved && !selectedDeliveryPlace) setAddressSelection(input, { value: resolved, label: resolved, verified: false, source: "Respaldo local" });
+          else if (input.dataset.selectedAddress !== input.value) {
+            selectedDeliveryAddress = "";
+            selectedDeliveryPlace = null;
+            input.dataset.selectedAddress = "";
+            input.dataset.verifiedAddress = "false";
+          }
+          closeAddressSuggestions(input);
+        }, 140);
+      });
+      if (!addressAutocompleteBound) {
+        document.addEventListener("click", event => {
+          const activeInput = document.querySelector("[data-address-input]");
+          if (activeInput && !event.target.closest(".address-picker")) closeAddressSuggestions(activeInput);
+        });
+        addressAutocompleteBound = true;
+      }
+    }
+    window.addToCart = function(productId) {
+      const product = siteSettings.products.find(item => item.id === productId);
+      if (!product || !product.available) return;
+      const cartItem = cart.find(item => item.id === productId);
+      if (cartItem) cartItem.quantity += 1; else cart.push({ ...product, quantity: 1 });
+      const message = document.getElementById("formMessage");
+      if (message) message.textContent = "";
+      renderCart();
+    };
+    window.changeQuantity = function(productId, amount) {
+      const cartItem = cart.find(item => item.id === productId);
+      if (!cartItem) return;
+      cartItem.quantity += amount;
+      if (cartItem.quantity <= 0) cart = cart.filter(item => item.id !== productId);
+      renderCart();
+    };
+    function getCartSubtotal() { return cart.reduce((total, item) => total + Number(item.price) * item.quantity, 0); }
+    function getCartTotal() { return getCartSubtotal() + (cart.length ? Number(siteSettings.order.deliveryCost) || 0 : 0); }
+    function renderCart() {
+      clearCartBtn.disabled = cart.length === 0;
+      cartList.innerHTML = cart.length === 0 ? `<div class="empty">${css(siteSettings.order.emptyCartText)}</div>` : `<div class="cart-list">${cart.map(item => `<div class="cart-item"><div><p class="cart-name">${css(item.name)}</p><p class="cart-meta">${formatMoney(item.price)} x ${item.quantity} = ${formatMoney(Number(item.price) * item.quantity)}</p></div><div class="quantity" aria-label="Cantidad de ${css(item.name)}"><button type="button" onclick="changeQuantity('${css(item.id)}', -1)" aria-label="Restar">-</button><span>${item.quantity}</span><button type="button" onclick="changeQuantity('${css(item.id)}', 1)" aria-label="Sumar">+</button></div></div>`).join("")}${siteSettings.order.deliveryCost > 0 ? `<div class="cart-item"><p class="cart-name">Despacho</p><p class="cart-meta">${formatMoney(siteSettings.order.deliveryCost)}</p></div>` : ""}</div>`;
+      cartTotal.textContent = formatMoney(getCartTotal());
+    }
+    function readOrderData() {
+      const data = {};
+      Object.keys(siteSettings.order.fields).forEach(key => {
+        const field = document.querySelector(`[data-field="${key}"]`);
+        if (field) data[key] = field.value.trim();
+      });
+      return data;
+    }
+    function buildWhatsAppMessage(data) {
+      const productLines = cart.map(item => `- ${item.name} x ${item.quantity}: ${formatMoney(Number(item.price) * item.quantity)}`).join("\n");
+      const dataLines = Object.entries(siteSettings.order.fields).filter(([key, field]) => field.visible && data[key]).map(([key, field]) => `${field.label}: ${data[key]}`).join("\n");
+      const deliveryLine = siteSettings.order.deliveryCost > 0 ? `\nDespacho: ${formatMoney(siteSettings.order.deliveryCost)}` : "";
+      return `${siteSettings.order.messageTemplate}\n\n${productLines}${deliveryLine}\n\n${siteSettings.order.totalText}: ${formatMoney(getCartTotal())}\n\n${dataLines}`;
+    }
+    clearCartBtn.addEventListener("click", () => { if (!cart.length || confirm("Quieres vaciar el carrito?")) { cart = []; const message = document.getElementById("formMessage"); if (message) message.textContent = ""; renderCart(); } });
+    orderForm.addEventListener("submit", async event => {
+      event.preventDefault();
+      const messageNode = document.getElementById("formMessage");
+      const subtotal = getCartSubtotal();
+      if (!siteSettings.order.acceptsOrders) { messageNode.textContent = "En este momento no se aceptan pedidos."; return; }
+      if (!cart.length) { messageNode.textContent = "Agrega al menos un producto al carrito."; return; }
+      if (subtotal < Number(siteSettings.order.minOrder || 0)) { messageNode.textContent = `El pedido minimo es ${formatMoney(siteSettings.order.minOrder)}.`; return; }
+      const data = readOrderData();
+      const missing = Object.entries(siteSettings.order.fields).some(([key, field]) => field.visible && field.required && !data[key]);
+      if (missing) { messageNode.textContent = siteSettings.order.errorText; return; }
+      let validatedAddressPlace = null;
+      if (data.address) {
+        const addressInput = document.querySelector("[data-address-input]");
+        const warning = document.getElementById("addressWarning");
+        if (warning) warning.textContent = "Validando direccion en mapa...";
+        messageNode.textContent = "Validando direccion en mapa...";
+        const validated = await validateDeliveryAddress(data.address);
+        if (!addressInput || !validated) {
+          messageNode.textContent = "No pude confirmar esa direccion en la base real de mapas. Revisa calle, numero y comuna.";
+          if (addressInput) {
+            if (warning) warning.textContent = "Debe existir en Los Angeles o estar claramente identificada.";
+            highlightedAddressIndex = 0;
+            renderAddressSuggestions(addressInput);
+            queueRemoteAddressLookup(addressInput);
+            addressInput.focus();
+          }
+          return;
+        }
+        if (!hasValidCoordinates(validated)) {
+          messageNode.textContent = "Selecciona una direccion confirmada en el mapa para registrar la consulta con precision.";
+          if (warning) warning.textContent = "La direccion debe estar validada con coordenadas reales.";
+          if (addressInput) {
+            renderAddressSuggestions(addressInput);
+            queueRemoteAddressLookup(addressInput);
+            addressInput.focus();
+          }
+          return;
+        }
+        data.address = validated.value;
+        validatedAddressPlace = validated;
+        setAddressSelection(addressInput, validated);
+      }
+      const encodedMessage = encodeURIComponent(buildWhatsAppMessage(data));
+      const number = (siteSettings.order.whatsapp || siteSettings.business.whatsapp || "56998269427").replace(/\D/g, "");
+      saveConsultationRecord(data, validatedAddressPlace);
+      window.open(`https://wa.me/${number}?text=${encodedMessage}`, "_blank");
+      messageNode.textContent = siteSettings.order.sentText;
+    });
+
+    document.getElementById("logoutCustomerBtn")?.addEventListener("click", logoutCustomer);
+
+    injectCompatibilityStyles();
+    applyTheme();
+    renderAuthState();
+    renderBusiness();
+    renderProducts();
+    renderOrderForm();
+    renderCart();
+  </script>
+  <script type="module">
+    import {
+      cerrarSesion,
+      mostrarErrorSeguro,
+      observarSesion,
+      obtenerEmprendimientoDeUsuario
+    } from "./js/auth-service.js";
+
+    const authMessage = document.getElementById("authMessage");
+    const loginUrl = "index.html?redirect=plantas-whatsapp.html";
+    const currentPage = "plantas-whatsapp.html";
+
+    function setAuthMessage(text) {
+      if (authMessage) authMessage.textContent = text || "";
+    }
+
+    window.firebaseLogout = async () => {
+      setAuthMessage("");
+      try {
+        await cerrarSesion();
+        window.location.replace("index.html");
+      } catch (error) {
+        setAuthMessage(mostrarErrorSeguro(error));
+      }
+    };
+
+    observarSesion(user => {
+      if (!user) {
+        window.location.replace(loginUrl);
+        return;
+      }
+      const emprendimiento = obtenerEmprendimientoDeUsuario(user, currentPage);
+      if (!emprendimiento.pages.includes(currentPage)) {
+        window.location.replace(emprendimiento.sitePage || emprendimiento.adminPage);
+        return;
+      }
+      window.setCustomerAuthUser?.(user);
+    });
+  </script>
+</body>
+</html>
