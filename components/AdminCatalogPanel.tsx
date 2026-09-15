@@ -36,6 +36,18 @@ const chevronIcon = (
   </svg>
 );
 
+const upIcon = (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="m6 15 6-6 6 6" />
+  </svg>
+);
+
+const downIcon = (
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="m6 9 6 6 6-6" />
+  </svg>
+);
+
 const dragIcon = (
   <svg viewBox="0 0 24 24" aria-hidden="true">
     <path d="M8 6h.01" />
@@ -51,6 +63,20 @@ function uniqueCategories(products: EditableProduct[]) {
   const labels = new Set(defaultCategories);
   products.forEach((product) => labels.add(product.categoria || productCategory(product)));
   return [...labels];
+}
+
+function normalizeProducts(products: Product[]) {
+  const counters = new Map<string, number>();
+  return products.map((product) => {
+    const categoria = product.categoria || productCategory(product);
+    const nextOrder = (counters.get(categoria) || 0) + 1;
+    counters.set(categoria, nextOrder);
+    return {
+      ...product,
+      categoria,
+      orden: Number(product.orden) || nextOrder
+    };
+  });
 }
 
 function sortProducts(products: EditableProduct[]) {
@@ -77,9 +103,10 @@ async function saveProduct(id: string, updates: Partial<EditableProduct>) {
 }
 
 export default function AdminCatalogPanel({ initialProducts }: { initialProducts: Product[] }) {
-  const [products, setProducts] = useState<EditableProduct[]>(() => sortProducts(initialProducts as EditableProduct[]));
-  const [categories, setCategories] = useState(() => uniqueCategories(initialProducts as EditableProduct[]));
-  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(uniqueCategories(initialProducts as EditableProduct[])));
+  const normalizedInitialProducts = useMemo(() => normalizeProducts(initialProducts), [initialProducts]);
+  const [products, setProducts] = useState<EditableProduct[]>(() => normalizedInitialProducts);
+  const [categories, setCategories] = useState(() => uniqueCategories(normalizedInitialProducts));
+  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(uniqueCategories(normalizedInitialProducts)));
   const [productFormCollapsed, setProductFormCollapsed] = useState(true);
   const [categoryName, setCategoryName] = useState("");
   const [addPreview, setAddPreview] = useState("");
@@ -98,7 +125,9 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
     }));
   }, [categories, products]);
 
-  const activeProducts = useMemo(() => sortProducts(products.filter((product) => product.activo)), [products]);
+  const activeProducts = useMemo(() => {
+    return categories.flatMap((category) => sortProducts(products.filter((product) => product.activo && (product.categoria || productCategory(product)) === category)));
+  }, [categories, products]);
 
   function toggleCategory(category: string) {
     setCollapsed((current) => {
@@ -217,6 +246,9 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
         descripcion: String(form.get("descripcion") || ""),
         imagen_url
       };
+      if (updates.categoria && updates.categoria !== (editing.categoria || productCategory(editing))) {
+        updates.orden = products.filter((product) => (product.categoria || productCategory(product)) === updates.categoria).length + 1;
+      }
       await saveProduct(editing.id, updates);
       setProducts((current) => current.map((product) => (product.id === editing.id ? { ...product, ...updates } : product)));
       setEditing(null);
@@ -255,6 +287,26 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
     await Promise.all(orderedIds.map((id, index) => saveProduct(id, { orden: index + 1, categoria: category })));
   }
 
+  function reorderCategory(category: string, orderedIds: string[]) {
+    setProducts((current) => current.map((product) => {
+      const order = orderedIds.indexOf(product.id);
+      return order >= 0 ? { ...product, categoria: category, orden: order + 1 } : product;
+    }));
+    persistOrder(category, orderedIds).catch(() => setError("El orden cambió en pantalla, pero no se pudo guardar en la hoja."));
+  }
+
+  function moveProduct(product: EditableProduct, direction: -1 | 1) {
+    const category = product.categoria || productCategory(product);
+    const categoryProducts = sortProducts(products.filter((item) => (item.categoria || productCategory(item)) === category));
+    const currentIndex = categoryProducts.findIndex((item) => item.id === product.id);
+    const nextIndex = currentIndex + direction;
+    if (currentIndex < 0 || nextIndex < 0 || nextIndex >= categoryProducts.length) return;
+    const nextCategoryProducts = [...categoryProducts];
+    const [selected] = nextCategoryProducts.splice(currentIndex, 1);
+    nextCategoryProducts.splice(nextIndex, 0, selected);
+    reorderCategory(category, nextCategoryProducts.map((item) => item.id));
+  }
+
   function dropProduct(category: string, targetId?: string) {
     if (!draggedId) return;
     const dragged = products.find((product) => product.id === draggedId);
@@ -269,11 +321,7 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
     const nextCategoryProducts = [...withoutDragged];
     nextCategoryProducts.splice(targetIndex < 0 ? nextCategoryProducts.length : targetIndex, 0, dragged);
     const orderedIds = nextCategoryProducts.map((product) => product.id);
-    setProducts((current) => current.map((product) => {
-      const order = orderedIds.indexOf(product.id);
-      return order >= 0 ? { ...product, orden: order + 1 } : product;
-    }));
-    persistOrder(category, orderedIds).catch(() => setError("El orden cambió en pantalla, pero no se pudo guardar en la hoja."));
+    reorderCategory(category, orderedIds);
     setDraggedId("");
     setDropTargetId("");
   }
@@ -366,6 +414,8 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
                           <span className="category-pill">{category}</span>
                           <div className="product-actions" aria-label="Acciones del producto">
                             <button className="icon-button drag-button" type="button" aria-label="Arrastrar producto">{dragIcon}</button>
+                            <button className="icon-button order-button" type="button" aria-label="Subir producto" onClick={() => moveProduct(product, -1)}>{upIcon}</button>
+                            <button className="icon-button order-button" type="button" aria-label="Bajar producto" onClick={() => moveProduct(product, 1)}>{downIcon}</button>
                             <button className="icon-button edit-button" type="button" aria-label="Editar producto" onClick={() => openEditor(product)}>{editIcon}</button>
                             <button className="icon-button delete-button" type="button" aria-label="Eliminar producto" onClick={() => deleteProduct(product)}>{trashIcon}</button>
                           </div>

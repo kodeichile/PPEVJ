@@ -2449,6 +2449,7 @@ button {
 .category-delete-button::before,
 .edit-button::before,
 .delete-button::before,
+.order-button::before,
 .drag-button::before {
   content: none;
 }
@@ -2461,6 +2462,7 @@ button {
 .category-delete-button svg,
 .category-chevron svg,
 .drag-button svg,
+.order-button svg,
 .edit-button svg,
 .delete-button svg {
   width: 17px;
@@ -2663,7 +2665,8 @@ button {
 
 .edit-button,
 .delete-button,
-.drag-button {
+.drag-button,
+.order-button {
   width: 26px;
   height: 26px;
   padding: 0;
@@ -2702,6 +2705,8 @@ button {
 
 .edit-button:hover,
 .edit-button:focus-visible,
+.order-button:hover,
+.order-button:focus-visible,
 .drag-button:hover,
 .drag-button:focus-visible {
   border-color: var(--green-700);
