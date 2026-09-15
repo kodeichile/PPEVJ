@@ -7,6 +7,7 @@ type ProductInput = Omit<Product, "id" | "fecha_creacion"> & { id?: string };
 
 async function callAppsScript<T>(payload: Record<string, unknown>): Promise<T> {
   if (!APPSCRIPT_URL) throw new Error("APPSCRIPT_URL no configurada");
+  if (!APPSCRIPT_TOKEN) throw new Error("APPSCRIPT_TOKEN no configurado");
 
   const response = await fetch(APPSCRIPT_URL, {
     method: "POST",

@@ -6,12 +6,20 @@ function privateKey() {
 }
 
 export function adminAuth() {
+  const projectId = process.env.FIREBASE_ADMIN_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_ADMIN_CLIENT_EMAIL;
+  const key = privateKey();
+
+  if (!projectId || !clientEmail || !key) {
+    throw new Error("Firebase Admin no esta configurado. Revisa FIREBASE_ADMIN_PROJECT_ID, FIREBASE_ADMIN_CLIENT_EMAIL y FIREBASE_ADMIN_PRIVATE_KEY.");
+  }
+
   if (!getApps().length) {
     initializeApp({
       credential: cert({
-        projectId: process.env.FIREBASE_ADMIN_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_ADMIN_CLIENT_EMAIL,
-        privateKey: privateKey()
+        projectId,
+        clientEmail,
+        privateKey: key
       })
     });
   }

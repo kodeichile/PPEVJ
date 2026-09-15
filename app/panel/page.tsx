@@ -13,13 +13,26 @@ export default async function PanelPage() {
   const products = await listProducts({ includeInactive: true });
 
   return (
-    <main className="panel-page">
-      <h1>Panel de catalogo</h1>
-      <p className="muted">Edita precios, activa u oculta productos y agrega nuevos items al catalogo.</p>
-      <LogoutButton />
+    <main className="admin-page">
+      <section className="admin-hero">
+        <div>
+          <p className="eyebrow">Administración</p>
+          <h1>Panel del catálogo</h1>
+          <p>Gestiona productos del vivero desde una ventana separada del sitio público.</p>
+        </div>
+        <LogoutButton />
+      </section>
       <div className="admin-layout">
-        <AdminProductList products={products} />
-        <ProductForm />
+        <div className="admin-products">
+          <div className="admin-toolbar">
+            <h2>Productos actuales</h2>
+            <span>Conectado a Apps Script</span>
+          </div>
+          <AdminProductList products={products} />
+        </div>
+        <div className="admin-side">
+          <ProductForm />
+        </div>
       </div>
     </main>
   );
