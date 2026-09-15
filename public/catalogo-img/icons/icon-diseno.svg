@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Dise&ntilde;o de jardines</title>
+  <g fill="none" stroke="#19733f" stroke-width="4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M13 14h38v36H13z" fill="#eef8f1"/>
+    <path d="M13 26h38"/>
+    <path d="M25 14v36"/>
+    <path d="M25 42c8-1.5 13.5-6.5 16.5-15"/>
+    <path d="M33.5 28.5c-4.8-.4-8-3.5-9.2-9 5.6.2 9 3.4 9.2 9Z" fill="#fff"/>
+    <path d="M41.5 27c4.8-.4 8-3.5 9.2-9-5.6.2-9 3.4-9.2 9Z" fill="#fff"/>
+    <path d="M38 44h7"/>
+    <path d="M41.5 40.5V48"/>
+  </g>
+</svg>

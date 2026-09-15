@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-labelledby="title">
+  <title>Riego</title>
+  <g fill="none" stroke="#19733f" stroke-width="3.4" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M15 45c6 5.3 28 5.3 34 0"/>
+    <path d="M22 45V33a10 10 0 0 1 20 0v12"/>
+    <path d="M18 33h28"/>
+    <path d="M32 17v-5"/>
+    <path d="M22 20l-3.5-3.5"/>
+    <path d="M42 20l3.5-3.5"/>
+    <path d="M25 30l-6 6"/>
+    <path d="M32 30l-2 8"/>
+    <path d="M39 30l6 6"/>
+  </g>
+</svg>
