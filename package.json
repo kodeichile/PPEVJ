@@ -3,10 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "node scripts/serve-outputs.mjs",
-    "build": "node scripts/validate-outputs.mjs",
-    "start": "node scripts/serve-outputs.mjs",
-    "lint": "next lint"
+  "dev": "next dev",
+  "build": "next build",
+  "start": "next start",
+  "lint": "next lint"
   },
   "dependencies": {
     "firebase": "^12.2.1",
