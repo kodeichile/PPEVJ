@@ -3,9 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
+    "dev": "node scripts/serve-outputs.mjs",
+    "build": "node scripts/validate-outputs.mjs",
+    "start": "node scripts/serve-outputs.mjs",
     "lint": "next lint"
   },
   "dependencies": {
