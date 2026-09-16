@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const navItems = [
   { href: "/", label: "Inicio" },
@@ -13,7 +14,12 @@ const navItems = [
 
 export default function SiteHeader() {
   const pathname = usePathname();
+  const [menuOpen, setMenuOpen] = useState(false);
   const openCart = () => document.dispatchEvent(new CustomEvent("open-cart"));
+
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [pathname]);
 
   return (
     <header className="site-header">
@@ -27,12 +33,12 @@ export default function SiteHeader() {
         <Link className="brand" href="/">
           <img className="brand-logo" src="/catalogo-img/logo-entre-vinos-jardines-recortado.png" alt="Entre Vinos y Jardines" />
         </Link>
-        <button className="menu-toggle" type="button" aria-expanded="false" aria-controls="main-menu">
+        <button className="menu-toggle" type="button" aria-expanded={menuOpen} aria-controls="main-menu" onClick={() => setMenuOpen((open) => !open)}>
           <span />
           <span />
           <span />
         </button>
-        <div className="menu" id="main-menu">
+        <div className={`menu ${menuOpen ? "open" : ""}`} id="main-menu">
           {navItems.map((item) => (
             <Link key={item.href} className={pathname === item.href ? "active" : ""} href={item.href}>
               {item.label}
