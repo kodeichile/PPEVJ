@@ -3,11 +3,13 @@ import type { CSSProperties } from "react";
 import ProductCatalog from "@/components/ProductCatalog";
 import { services } from "@/lib/catalog";
 import { listProducts } from "@/lib/appscript";
+import { fallbackProducts } from "@/lib/fallback-products";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const products = await listProducts();
+  const displayProducts = products.length ? products : fallbackProducts.filter((product) => product.activo);
 
   return (
     <main>
@@ -50,7 +52,7 @@ export default async function Home() {
           <div className="section-title"><h2>Productos destacados</h2></div>
           <Link className="view-all" href="/productos">Ver todos los productos</Link>
         </div>
-        <ProductCatalog products={products} featured />
+        <ProductCatalog products={displayProducts} featured />
       </section>
 
       <section className="section services-section" id="servicios">

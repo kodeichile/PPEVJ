@@ -21,6 +21,7 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
@@ -29,6 +30,7 @@ body {
   color: var(--ink);
   background: var(--cream);
   animation: pageFade 560ms var(--ease-out) both;
+  overflow-x: hidden;
 }
 
 a {
@@ -1182,27 +1184,50 @@ button {
   }
 
   .topbar {
-    padding: 10px 5vw;
-    flex-wrap: wrap;
-    justify-content: center;
+    min-height: 30px;
+    padding: 0;
+    overflow: hidden;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    gap: 28px;
+    white-space: nowrap;
+    font-size: 11px;
+  }
+
+  .topbar span {
+    flex: 0 0 auto;
+    animation: topbarMarquee 14s linear infinite;
   }
 
   .navbar {
-    padding: 14px 5vw;
+    min-height: 74px;
+    padding: 8px 5vw;
     flex-wrap: wrap;
+    gap: 8px;
   }
 
   .brand {
-    width: min(440px, 76vw);
-    min-width: 260px;
+    width: min(200px, 47vw);
+    min-width: 150px;
+    flex: 0 1 auto;
   }
 
   .brand-logo {
-    height: 88px;
+    height: 58px;
   }
 
   .menu-toggle {
+    width: 36px;
+    height: 36px;
     display: flex;
+    order: 3;
+    flex: 0 0 36px;
+    margin-left: 2px;
+  }
+
+  .menu-toggle span {
+    width: 23px;
+    height: 2px;
   }
 
   .menu {
@@ -1224,9 +1249,41 @@ button {
   }
 
   .nav-actions {
-    width: 100%;
-    justify-content: space-between;
-    order: 6;
+    width: auto;
+    justify-content: flex-end;
+    order: 2;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+  .icon-button,
+  .cart-button {
+    width: 32px;
+    height: 32px;
+  }
+
+  .cart-button {
+    margin-right: 0;
+  }
+
+  .cart-button span {
+    top: -6px;
+    right: -7px;
+    min-width: 17px;
+    height: 17px;
+    font-size: 10px;
+  }
+
+  .whatsapp {
+    min-width: 86px;
+    min-height: 34px;
+    padding: 0 8px;
+    border-radius: 6px;
+  }
+
+  .whatsapp::before {
+    width: 72px;
+    height: 24px;
   }
 
   .hero-slide {
@@ -1342,37 +1399,48 @@ button {
   }
 
   .footer {
-    padding: 18px 5vw 12px;
+    padding: 16px 5vw 10px;
   }
 
   .footer-grid {
-    grid-template-columns: repeat(4, minmax(132px, max-content));
-    gap: 16px;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    scrollbar-width: thin;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px 14px;
+    overflow-x: visible;
+    padding-bottom: 0;
   }
 
   .footer-grid > div {
-    min-width: 132px;
+    min-width: 0;
   }
 
   .footer-grid > div:first-child {
-    min-width: 190px;
+    min-width: 0;
+    grid-column: 1 / -1;
   }
 
   .footer-brand {
-    width: 180px;
+    width: 170px;
   }
 
   .footer-brand .brand-logo {
-    height: 52px;
+    height: 44px;
   }
 
   .footer h3,
   .footer a:not(.brand),
   .footer p {
-    white-space: nowrap;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    font-size: 12px;
+    line-height: 1.35;
+  }
+
+  .footer h3 {
+    margin-bottom: 5px;
+  }
+
+  .footer a:not(.brand) {
+    margin: 4px 0;
   }
 
   .featured-grid {
@@ -2041,6 +2109,16 @@ button {
   }
   40% {
     box-shadow: 0 0 0 7px rgba(47, 158, 72, 0.2);
+  }
+}
+
+@keyframes topbarMarquee {
+  from {
+    transform: translateX(100vw);
+  }
+
+  to {
+    transform: translateX(-420px);
   }
 }
 
