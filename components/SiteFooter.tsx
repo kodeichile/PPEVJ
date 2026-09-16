@@ -4,11 +4,8 @@ export default function SiteFooter() {
   return (
     <footer className="footer" id="contacto">
       <div className="footer-grid">
-        <div>
-          <Link className="brand footer-brand" href="/">
-            <img className="brand-logo" src="/catalogo-img/logo-entre-vinos-jardines-recortado.png" alt="Entre Vinos y Jardines" />
-          </Link>
-          <p>Soluciones integrales para crear, preparar y mantener espacios verdes hermosos y sostenibles.</p>
+        <div className="footer-intro">
+          <h2>Soluciones integrales para espacios verdes hermosos y sostenibles</h2>
         </div>
         <div className="footer-nav-group footer-featured-group">
           <h3>Productos</h3>
