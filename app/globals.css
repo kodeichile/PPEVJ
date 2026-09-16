@@ -1257,10 +1257,88 @@ button {
     text-align: center;
   }
 
-  .category-grid,
-  .product-grid,
-  .service-grid {
+  .product-grid {
     grid-template-columns: 1fr;
+  }
+
+  .category-grid {
+    gap: 10px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .category-card {
+    min-height: 104px;
+    padding: 12px 6px;
+    gap: 5px;
+    box-shadow: 0 6px 16px rgba(21, 52, 32, 0.07);
+  }
+
+  .category-icon {
+    width: 44px;
+    height: 44px;
+  }
+
+  .category-icon img {
+    width: 34px;
+    height: 34px;
+  }
+
+  .category-card strong {
+    max-width: 100%;
+    font-size: 13px;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  .category-card small {
+    font-size: 11px;
+  }
+
+  .service-grid {
+    gap: 12px;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .service-card img {
+    aspect-ratio: 1.35;
+  }
+
+  .service-card div {
+    padding: 14px 11px 13px;
+  }
+
+  .service-icon {
+    width: 38px;
+    height: 38px;
+    margin-top: -34px;
+    margin-bottom: 9px;
+  }
+
+  .service-icon img {
+    width: 27px;
+    height: 27px;
+  }
+
+  .service-card h3 {
+    min-height: 34px;
+    margin-bottom: 6px;
+    font-size: 14px;
+    line-height: 1.18;
+  }
+
+  .service-card p {
+    min-height: 50px;
+    margin-bottom: 10px;
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: 12px;
+    line-height: 1.32;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+
+  .service-card a {
+    font-size: 12px;
   }
 
   .footer {
@@ -1763,6 +1841,47 @@ button {
 }
 
 @media (max-width: 380px) {
+  .category-grid {
+    gap: 8px;
+  }
+
+  .category-card {
+    min-height: 96px;
+    padding: 10px 5px;
+  }
+
+  .category-icon {
+    width: 38px;
+    height: 38px;
+  }
+
+  .category-icon img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .category-card strong {
+    font-size: 12px;
+  }
+
+  .service-grid {
+    gap: 10px;
+  }
+
+  .service-card div {
+    padding-left: 9px;
+    padding-right: 9px;
+  }
+
+  .service-card h3 {
+    font-size: 13px;
+  }
+
+  .service-card p {
+    min-height: 46px;
+    font-size: 11px;
+  }
+
   .catalog-layout {
     padding-left: 3vw;
     padding-right: 3vw;
