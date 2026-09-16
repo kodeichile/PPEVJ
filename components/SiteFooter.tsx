@@ -10,21 +10,21 @@ export default function SiteFooter() {
           </Link>
           <p>Soluciones integrales para crear, preparar y mantener espacios verdes hermosos y sostenibles.</p>
         </div>
-        <div>
+        <div className="footer-nav-group footer-featured-group">
           <h3>Productos</h3>
           <Link href="/productos">Plantas</Link>
           <Link href="/productos">Arboles</Link>
           <Link href="/productos">Jardineria</Link>
           <Link href="/productos">Herramientas</Link>
         </div>
-        <div>
+        <div className="footer-nav-group footer-featured-group">
           <h3>Servicios</h3>
           <Link href="/servicios/diseno-jardines">Diseno de jardines</Link>
           <Link href="/servicios/preparacion">Preparacion</Link>
           <Link href="/servicios/mantencion">Mantencion</Link>
           <Link href="/servicios/riego-automatico">Riego</Link>
         </div>
-        <div id="nosotros">
+        <div className="footer-nav-group footer-featured-group" id="nosotros">
           <h3>Contacto</h3>
           <p>WhatsApp: +56 9 6505 1137</p>
           <p>Cotizaciones directas por WhatsApp</p>
@@ -33,7 +33,6 @@ export default function SiteFooter() {
         </div>
       </div>
       <p className="copyright">&copy; 2026 Entre Vinos y Jardines Catalogo verde. Todos los derechos reservados.</p>
-      <Link className="private-access" href="/ingresar">Acceso cliente</Link>
     </footer>
   );
 }
