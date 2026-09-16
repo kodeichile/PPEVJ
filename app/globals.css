@@ -1211,13 +1211,13 @@ button {
   }
 
   .brand {
-    width: min(154px, 38vw);
-    min-width: 118px;
+    width: min(172px, 48vw);
+    min-width: 132px;
     flex: 0 1 auto;
   }
 
   .brand-logo {
-    height: 44px;
+    height: 48px;
   }
 
   .menu-toggle {
@@ -1279,15 +1279,7 @@ button {
   }
 
   .whatsapp {
-    min-width: 74px;
-    min-height: 32px;
-    padding: 0 6px;
-    border-radius: 6px;
-  }
-
-  .whatsapp::before {
-    width: 62px;
-    height: 21px;
+    display: none;
   }
 
   .hero-slide {
@@ -2016,21 +2008,12 @@ button {
   }
 
   .brand {
-    width: 126px;
-    min-width: 108px;
+    width: 138px;
+    min-width: 118px;
   }
 
   .brand-logo {
-    height: 38px;
-  }
-
-  .whatsapp {
-    min-width: 64px;
-  }
-
-  .whatsapp::before {
-    width: 54px;
-    height: 19px;
+    height: 42px;
   }
 
   .icon-button,
