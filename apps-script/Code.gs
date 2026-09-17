@@ -1,6 +1,6 @@
 const SHEET_NAME = "Productos";
 const DRIVE_FOLDER_ID = "PEGA_AQUI_EL_ID_DE_LA_CARPETA";
-const HEADERS = ["id", "nombre", "precio", "imagen_url", "descripcion", "categoria", "orden", "activo", "fecha_creacion"];
+const HEADERS = ["id", "nombre", "descripcion", "precio", "categoria", "orden", "activo", "imagen_url", "created_at", "updated_at"];
 
 function doGet(e) {
   const action = e.parameter.action;
@@ -28,7 +28,8 @@ function verificarToken_(token) {
 }
 
 function sheet_() {
-  const spreadsheet = SpreadsheetApp.getActive();
+  const sheetId = PropertiesService.getScriptProperties().getProperty("SHEET_ID");
+  const spreadsheet = sheetId ? SpreadsheetApp.openById(sheetId) : SpreadsheetApp.getActive();
   let sheet = spreadsheet.getSheetByName(SHEET_NAME);
   if (!sheet) sheet = spreadsheet.insertSheet(SHEET_NAME);
   if (sheet.getLastRow() === 0) {
@@ -54,6 +55,7 @@ function readProducts_() {
     product.orden = Number(product.orden) || 0;
     product.categoria = product.categoria || inferCategory_(product);
     product.activo = product.activo === true || String(product.activo).toUpperCase() === "TRUE";
+    product.fecha_creacion = product.created_at || product.fecha_creacion || "";
     return product;
   });
 }
@@ -69,7 +71,8 @@ function crearProducto_(product) {
     categoria: product.categoria || inferCategory_(Object.assign({}, product, { id })),
     orden: Number(product.orden) || 0,
     activo: product.activo !== false,
-    fecha_creacion: new Date().toISOString()
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString()
   });
   const sheet = sheet_();
   const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
@@ -90,6 +93,8 @@ function actualizarProducto_(id, updates) {
     const column = headers.indexOf(key);
     if (column >= 0) sheet.getRange(rowIndex + 1, column + 1).setValue(updates[key]);
   });
+  const updatedAtColumn = headers.indexOf("updated_at");
+  if (updatedAtColumn >= 0) sheet.getRange(rowIndex + 1, updatedAtColumn + 1).setValue(new Date().toISOString());
 
   return { ok: true };
 }
