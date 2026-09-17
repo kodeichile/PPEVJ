@@ -53,12 +53,20 @@ button {
   padding: 0 7vw;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 18px;
+  justify-content: flex-start;
+  gap: 42px;
+  overflow: hidden;
+  flex-wrap: nowrap;
+  white-space: nowrap;
   color: #fff;
   background: var(--green-950);
   font-size: 13px;
   font-weight: 600;
+}
+
+.topbar span {
+  flex: 0 0 auto;
+  animation: topbarMarquee 18s linear infinite;
 }
 
 .navbar {
@@ -1199,7 +1207,6 @@ button {
   }
 
   .topbar span {
-    flex: 0 0 auto;
     animation: topbarMarquee 14s linear infinite;
   }
 
@@ -2704,7 +2711,7 @@ button {
   overflow: hidden;
   background: #fff;
   opacity: 1;
-  max-height: 900px;
+  max-height: 1400px;
   transform: translateY(0);
   transition: max-height 320ms var(--ease-out), opacity 200ms ease, padding 260ms var(--ease-out), transform 260ms var(--ease-out), margin 260ms var(--ease-out);
 }

@@ -2,13 +2,15 @@
 
 import { ChangeEvent, DragEvent, FormEvent, useMemo, useRef, useState } from "react";
 import LogoutButton from "@/components/LogoutButton";
-import { moneyFormatter, productCategory, publicImageUrl } from "@/lib/catalog";
+import { moneyFormatter, productCategory, publicImageUrl, type Service } from "@/lib/catalog";
 import type { Product } from "@/lib/fallback-products";
 
 type EditableProduct = Product & {
   categoria?: string;
   orden?: number;
 };
+
+type EditableService = Service;
 
 const defaultCategories = ["Frutales", "Árboles Ornamentales", "Arbustos", "Flores", "Árboles", "Aromáticas"];
 const fallbackImage = "/catalogo-img/romero-30-cm-29.gif";
@@ -131,15 +133,38 @@ async function removeCategory(nombre: string) {
   if (!response.ok) throw new Error(data.error || "No se pudo eliminar la categoría.");
 }
 
-export default function AdminCatalogPanel({ initialProducts, initialCategories }: { initialProducts: Product[]; initialCategories: string[] }) {
+async function saveService(slug: string, updates: Partial<EditableService>) {
+  const response = await fetch(`/api/servicios/${encodeURIComponent(slug)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(updates)
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "No se pudo actualizar el servicio.");
+}
+
+export default function AdminCatalogPanel({
+  initialProducts,
+  initialCategories,
+  initialServices
+}: {
+  initialProducts: Product[];
+  initialCategories: string[];
+  initialServices: Service[];
+}) {
   const normalizedInitialProducts = useMemo(() => normalizeProducts(initialProducts), [initialProducts]);
   const [products, setProducts] = useState<EditableProduct[]>(() => normalizedInitialProducts);
+  const [services, setServices] = useState<EditableService[]>(() => initialServices);
   const initialCategoryList = useMemo(() => uniqueCategories(normalizedInitialProducts, initialCategories), [normalizedInitialProducts, initialCategories]);
   const [categories, setCategories] = useState(() => initialCategoryList);
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(initialCategoryList));
   const [productFormCollapsed, setProductFormCollapsed] = useState(true);
+  const [featuredFormCollapsed, setFeaturedFormCollapsed] = useState(true);
+  const [servicesFormCollapsed, setServicesFormCollapsed] = useState(true);
+  const [selectedServiceSlug, setSelectedServiceSlug] = useState(() => initialServices[0]?.slug || "");
   const [categoryName, setCategoryName] = useState("");
   const [addPreview, setAddPreview] = useState("");
+  const [servicePreview, setServicePreview] = useState("");
   const [editing, setEditing] = useState<EditableProduct | null>(null);
   const [editPreview, setEditPreview] = useState("");
   const [editUploadSelected, setEditUploadSelected] = useState(false);
@@ -150,6 +175,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
   const [error, setError] = useState("");
   const addFileInputRef = useRef<HTMLInputElement>(null);
   const editFileInputRef = useRef<HTMLInputElement>(null);
+  const serviceFileInputRef = useRef<HTMLInputElement>(null);
 
   const groupedProducts = useMemo(() => {
     return categories.map((category) => ({
@@ -161,6 +187,17 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
   const activeProducts = useMemo(() => {
     return categories.flatMap((category) => sortProducts(products.filter((product) => product.activo && (product.categoria || productCategory(product)) === category)));
   }, [categories, products]);
+
+  const featuredProducts = useMemo(() => {
+    return [...products]
+      .filter((product) => product.activo && product.destacado)
+      .sort((a, b) => (Number(a.destacado_orden) || 0) - (Number(b.destacado_orden) || 0))
+      .slice(0, 4);
+  }, [products]);
+
+  const selectedService = useMemo(() => {
+    return services.find((service) => service.slug === selectedServiceSlug) || services[0];
+  }, [selectedServiceSlug, services]);
 
   function toggleCategory(category: string) {
     setCollapsed((current) => {
@@ -259,6 +296,83 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
     setEditPreview(publicImageUrl(editing?.imagen_url, fallbackImage));
     setEditUploadSelected(false);
     if (editFileInputRef.current) editFileInputRef.current.value = "";
+  }
+
+  function updateServicePreview(event: ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (file) setServicePreview(URL.createObjectURL(file));
+  }
+
+  function clearServiceImage() {
+    setServicePreview("");
+    if (serviceFileInputRef.current) serviceFileInputRef.current.value = "";
+  }
+
+  async function saveFeaturedProducts(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const form = new FormData(event.currentTarget);
+    const selectedIds = [0, 1, 2, 3]
+      .map((index) => String(form.get(`featured_${index}`) || ""))
+      .filter(Boolean)
+      .filter((id, index, ids) => ids.indexOf(id) === index);
+    setSaving("featured");
+    setError("");
+    const previousProducts = products;
+    const nextProducts = products.map((product) => {
+      const selectedIndex = selectedIds.indexOf(product.id);
+      return {
+        ...product,
+        destacado: selectedIndex >= 0,
+        destacado_orden: selectedIndex >= 0 ? selectedIndex + 1 : 0
+      };
+    });
+    setProducts(nextProducts);
+    try {
+      await Promise.all(nextProducts.map((product) => {
+        const previous = previousProducts.find((item) => item.id === product.id);
+        if (previous?.destacado === product.destacado && Number(previous?.destacado_orden || 0) === Number(product.destacado_orden || 0)) {
+          return Promise.resolve();
+        }
+        return saveProduct(product.id, { destacado: product.destacado, destacado_orden: product.destacado_orden });
+      }));
+      setFeaturedFormCollapsed(true);
+    } catch (caught) {
+      setProducts(previousProducts);
+      setError(caught instanceof Error ? caught.message : "No se pudieron guardar los destacados.");
+    } finally {
+      setSaving("");
+    }
+  }
+
+  async function submitService(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!selectedService) return;
+    const form = new FormData(event.currentTarget);
+    setSaving("service");
+    setError("");
+    try {
+      const file = form.get("image_file") as File;
+      let image = String(form.get("image") || selectedService.image || "");
+      if (file?.size) image = await uploadImage(file);
+      const updates: Partial<EditableService> = {
+        title: String(form.get("title") || ""),
+        shortTitle: String(form.get("shortTitle") || ""),
+        description: String(form.get("description") || ""),
+        details: String(form.get("details") || ""),
+        image,
+        icon: selectedService.icon,
+        orden: Number(selectedService.orden) || services.findIndex((service) => service.slug === selectedService.slug) + 1,
+        activo: true
+      };
+      await saveService(selectedService.slug, updates);
+      setServices((current) => current.map((service) => service.slug === selectedService.slug ? { ...service, ...updates } : service));
+      clearServiceImage();
+      setServicesFormCollapsed(true);
+    } catch (caught) {
+      setError(caught instanceof Error ? caught.message : "No se pudo actualizar el servicio.");
+    } finally {
+      setSaving("");
+    }
   }
 
   async function createProduct(event: FormEvent<HTMLFormElement>) {
@@ -430,6 +544,26 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
             <button className="button primary" type="submit">Crear categoría</button>
           </form>
 
+          <form className={`admin-form admin-category collapsible-form ${featuredFormCollapsed ? "is-collapsed" : ""}`} onSubmit={saveFeaturedProducts}>
+            <button className="category-header form-toggle" type="button" aria-expanded={!featuredFormCollapsed} onClick={() => setFeaturedFormCollapsed((value) => !value)}>
+              <span className="category-toggle form-title"><span><strong>Productos destacados</strong><small>4 productos de inicio</small></span></span>
+              <span className="category-actions"><span className="category-chevron form-chevron" aria-hidden="true">{chevronIcon}</span></span>
+            </button>
+            <div className="form-body">
+              {[0, 1, 2, 3].map((index) => (
+                <label key={index}>Destacado {index + 1}
+                  <select name={`featured_${index}`} defaultValue={featuredProducts[index]?.id || ""}>
+                    <option value="">Sin producto</option>
+                    {products.filter((product) => product.activo !== false).map((product) => (
+                      <option key={product.id} value={product.id}>{product.nombre}</option>
+                    ))}
+                  </select>
+                </label>
+              ))}
+              <button className="button primary" type="submit" disabled={saving === "featured"}>{saving === "featured" ? "Guardando..." : "Guardar destacados"}</button>
+            </div>
+          </form>
+
           <form className={`admin-form admin-category collapsible-form ${productFormCollapsed ? "is-collapsed" : ""}`} onSubmit={createProduct}>
             <button className="category-header form-toggle" type="button" aria-expanded={!productFormCollapsed} onClick={() => setProductFormCollapsed((value) => !value)}>
               <span className="category-toggle form-title"><span><strong>Agregar producto</strong><small>Nuevo producto</small></span></span>
@@ -457,6 +591,36 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
               <label>URL de imagen<input name="imagen_url" placeholder="Opcional si subes archivo" /></label>
               <button className="button primary" type="submit" disabled={saving === "create"}>{saving === "create" ? "Guardando..." : "Guardar producto"}</button>
             </div>
+          </form>
+
+          <form className={`admin-form admin-category collapsible-form ${servicesFormCollapsed ? "is-collapsed" : ""}`} onSubmit={submitService}>
+            <button className="category-header form-toggle" type="button" aria-expanded={!servicesFormCollapsed} onClick={() => setServicesFormCollapsed((value) => !value)}>
+              <span className="category-toggle form-title"><span><strong>Nuestros servicios</strong><small>Imagen y contenido</small></span></span>
+              <span className="category-actions"><span className="category-chevron form-chevron" aria-hidden="true">{chevronIcon}</span></span>
+            </button>
+            {selectedService && (
+              <div className="form-body" key={selectedService.slug}>
+                <label>Servicio
+                  <select value={selectedService.slug} onChange={(event) => { setSelectedServiceSlug(event.target.value); clearServiceImage(); }}>
+                    {services.map((service) => <option key={service.slug} value={service.slug}>{service.title}</option>)}
+                  </select>
+                </label>
+                <label>Título<input name="title" type="text" defaultValue={selectedService.title} required /></label>
+                <label>Título corto<input name="shortTitle" type="text" defaultValue={selectedService.shortTitle} required /></label>
+                <label>Texto principal<textarea name="description" rows={3} defaultValue={selectedService.description} required /></label>
+                <label>Detalle<textarea name="details" rows={4} defaultValue={selectedService.details} required /></label>
+                <label className="admin-upload-field">
+                  Imagen del servicio
+                  <span className="upload-preview-wrap">
+                    <img className="admin-upload-preview has-image" src={servicePreview || publicImageUrl(selectedService.image, fallbackImage)} alt={`Vista previa de ${selectedService.title}`} />
+                    {servicePreview && <button className="upload-clear-button" type="button" aria-label="Quitar foto seleccionada" onClick={clearServiceImage}>×</button>}
+                  </span>
+                  <span className="file-drop admin-file-drop">Cambiar foto<input ref={serviceFileInputRef} name="image_file" type="file" accept="image/*" onChange={updateServicePreview} /></span>
+                </label>
+                <label>URL de imagen<input name="image" type="text" defaultValue={selectedService.image} /></label>
+                <button className="button primary" type="submit" disabled={saving === "service"}>{saving === "service" ? "Guardando..." : "Guardar servicio"}</button>
+              </div>
+            )}
           </form>
         </div>
 
