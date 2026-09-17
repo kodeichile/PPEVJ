@@ -2495,6 +2495,41 @@ button {
   opacity: 1;
 }
 
+.upload-preview-wrap,
+.edit-image-preview-wrap {
+  position: relative;
+  display: block;
+}
+
+.upload-clear-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(10, 61, 36, 0.88);
+  box-shadow: 0 10px 20px rgba(3, 34, 19, 0.2);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.upload-clear-button:hover,
+.upload-clear-button:focus-visible {
+  background: var(--green-700);
+  box-shadow: 0 12px 24px rgba(3, 34, 19, 0.28);
+  outline: none;
+  transform: translateY(-1px);
+}
+
 .visually-hidden-file {
   width: 1px !important;
   height: 1px !important;
