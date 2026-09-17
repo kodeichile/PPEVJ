@@ -160,7 +160,7 @@ export default function AdminCatalogPanel({
   const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(initialCategoryList));
   const [productFormCollapsed, setProductFormCollapsed] = useState(true);
   const [featuredFormCollapsed, setFeaturedFormCollapsed] = useState(true);
-  const [servicesFormCollapsed, setServicesFormCollapsed] = useState(true);
+  const [activePanel, setActivePanel] = useState<"products" | "services">("products");
   const [selectedServiceSlug, setSelectedServiceSlug] = useState(() => initialServices[0]?.slug || "");
   const [categoryName, setCategoryName] = useState("");
   const [addPreview, setAddPreview] = useState("");
@@ -367,7 +367,6 @@ export default function AdminCatalogPanel({
       await saveService(selectedService.slug, updates);
       setServices((current) => current.map((service) => service.slug === selectedService.slug ? { ...service, ...updates } : service));
       clearServiceImage();
-      setServicesFormCollapsed(true);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "No se pudo actualizar el servicio.");
     } finally {
@@ -593,13 +592,52 @@ export default function AdminCatalogPanel({
             </div>
           </form>
 
-          <form className={`admin-form admin-category collapsible-form ${servicesFormCollapsed ? "is-collapsed" : ""}`} onSubmit={submitService}>
-            <button className="category-header form-toggle" type="button" aria-expanded={!servicesFormCollapsed} onClick={() => setServicesFormCollapsed((value) => !value)}>
-              <span className="category-toggle form-title"><span><strong>Nuestros servicios</strong><small>Imagen y contenido</small></span></span>
-              <span className="category-actions"><span className="category-chevron form-chevron" aria-hidden="true">{chevronIcon}</span></span>
-            </button>
-            {selectedService && (
-              <div className="form-body" key={selectedService.slug}>
+          <section className="admin-form admin-service-nav" aria-label="Nuestros servicios">
+            <div>
+              <h2>Nuestros servicios</h2>
+              <p>Elige un servicio para editarlo en el panel derecho.</p>
+            </div>
+            <div className="service-nav-list">
+              {services.map((service) => (
+                <button
+                  className={`service-nav-button ${activePanel === "services" && selectedService?.slug === service.slug ? "is-active" : ""}`}
+                  key={service.slug}
+                  type="button"
+                  onClick={() => {
+                    setSelectedServiceSlug(service.slug);
+                    setActivePanel("services");
+                    clearServiceImage();
+                  }}
+                >
+                  <img src={publicImageUrl(service.image, fallbackImage)} alt="" />
+                  <span>
+                    <strong>{service.shortTitle || service.title}</strong>
+                    <small>{service.description}</small>
+                  </span>
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
+
+        <div className="admin-products">
+          {activePanel === "products" && (
+            <div className="admin-toolbar">
+              <h2>Productos actuales</h2>
+              <button className="button primary admin-preview-button" type="button" onClick={() => setPreviewOpen(true)}>Previsualización</button>
+            </div>
+          )}
+          {error && <p className="login-error" role="alert">{error}</p>}
+          {activePanel === "services" && selectedService ? (
+            <form className="admin-service-editor" onSubmit={submitService}>
+              <div className="admin-toolbar admin-service-toolbar">
+                <div>
+                  <p className="eyebrow">Nuestros servicios</p>
+                  <h2>{selectedService.title}</h2>
+                </div>
+                <button className="button admin-preview-button" type="button" onClick={() => setActivePanel("products")}>Volver a productos</button>
+              </div>
+              <div className="service-editor-grid" key={selectedService.slug}>
                 <label>Servicio
                   <select value={selectedService.slug} onChange={(event) => { setSelectedServiceSlug(event.target.value); clearServiceImage(); }}>
                     {services.map((service) => <option key={service.slug} value={service.slug}>{service.title}</option>)}
@@ -618,68 +656,61 @@ export default function AdminCatalogPanel({
                   <span className="file-drop admin-file-drop">Cambiar foto<input ref={serviceFileInputRef} name="image_file" type="file" accept="image/*" onChange={updateServicePreview} /></span>
                 </label>
                 <label>URL de imagen<input name="image" type="text" defaultValue={selectedService.image} /></label>
-                <button className="button primary" type="submit" disabled={saving === "service"}>{saving === "service" ? "Guardando..." : "Guardar servicio"}</button>
               </div>
-            )}
-          </form>
-        </div>
-
-        <div className="admin-products">
-          <div className="admin-toolbar">
-            <h2>Productos actuales</h2>
-            <button className="button primary admin-preview-button" type="button" onClick={() => setPreviewOpen(true)}>Previsualización</button>
-          </div>
-          {error && <p className="login-error" role="alert">{error}</p>}
-          <div className="category-list">
-            {groupedProducts.map(({ category, products: categoryProducts }) => {
-              const isCollapsed = collapsed.has(category);
-              return (
-                <section className={`admin-category ${isCollapsed ? "is-collapsed" : ""}`} key={category}>
-                  <div className="category-header">
-                    <button className="category-toggle" type="button" aria-expanded={!isCollapsed} onClick={() => toggleCategory(category)}>
-                      <span><strong className="category-name">{category}</strong><small className="category-count">{categoryProducts.length === 1 ? "1 producto" : `${categoryProducts.length} productos`}</small></span>
-                    </button>
-                    <div className="category-actions" aria-label="Acciones de categoría">
-                      <button className="icon-button category-edit-button" type="button" aria-label="Editar categoría" onClick={() => renameCategory(category)}>{editIcon}</button>
-                      <button className="icon-button category-delete-button" type="button" aria-label="Eliminar categoría" onClick={() => deleteCategory(category)}>{trashIcon}</button>
-                      <button className="category-chevron" type="button" aria-label="Expandir categoría" onClick={() => toggleCategory(category)}>{chevronIcon}</button>
+              <button className="button primary" type="submit" disabled={saving === "service"}>{saving === "service" ? "Guardando..." : "Guardar servicio"}</button>
+            </form>
+          ) : (
+            <div className="category-list">
+              {groupedProducts.map(({ category, products: categoryProducts }) => {
+                const isCollapsed = collapsed.has(category);
+                return (
+                  <section className={`admin-category ${isCollapsed ? "is-collapsed" : ""}`} key={category}>
+                    <div className="category-header">
+                      <button className="category-toggle" type="button" aria-expanded={!isCollapsed} onClick={() => toggleCategory(category)}>
+                        <span><strong className="category-name">{category}</strong><small className="category-count">{categoryProducts.length === 1 ? "1 producto" : `${categoryProducts.length} productos`}</small></span>
+                      </button>
+                      <div className="category-actions" aria-label="Acciones de categoría">
+                        <button className="icon-button category-edit-button" type="button" aria-label="Editar categoría" onClick={() => renameCategory(category)}>{editIcon}</button>
+                        <button className="icon-button category-delete-button" type="button" aria-label="Eliminar categoría" onClick={() => deleteCategory(category)}>{trashIcon}</button>
+                        <button className="category-chevron" type="button" aria-label="Expandir categoría" onClick={() => toggleCategory(category)}>{chevronIcon}</button>
+                      </div>
                     </div>
-                  </div>
-                  <div className="category-products" data-category={category} onDragOver={allowDrop} onDrop={() => dropProduct(category)}>
-                    {categoryProducts.map((product) => (
-                      <article
-                        className={`admin-product-row ${draggedId === product.id ? "is-dragging" : ""} ${dropTargetId === product.id ? "is-drop-target" : ""}`}
-                        key={product.id}
-                        draggable
-                        onDragStart={() => setDraggedId(product.id)}
-                        onDragEnd={() => { setDraggedId(""); setDropTargetId(""); }}
-                        onDragOver={(event) => { allowDrop(event); setDropTargetId(product.id); }}
-                        onDrop={(event) => { event.stopPropagation(); dropProduct(category, product.id); }}
-                      >
-                        <img src={publicImageUrl(product.imagen_url, fallbackImage)} alt={product.nombre} />
-                        <div>
-                          <h3>{product.nombre}</h3>
-                          <p>{product.activo ? "Activo" : "Oculto"} · {moneyFormatter.format(product.precio)}</p>
-                          <span className="category-pill">{category}</span>
-                          <div className="product-actions" aria-label="Acciones del producto">
-                            <button className="icon-button drag-button" type="button" aria-label="Arrastrar producto">{dragIcon}</button>
-                            <button className="icon-button order-button" type="button" aria-label="Subir producto" onClick={() => moveProduct(product, -1)}>{upIcon}</button>
-                            <button className="icon-button order-button" type="button" aria-label="Bajar producto" onClick={() => moveProduct(product, 1)}>{downIcon}</button>
-                            <button className="icon-button edit-button" type="button" aria-label="Editar producto" onClick={() => openEditor(product)}>{editIcon}</button>
-                            <button className="icon-button delete-button" type="button" aria-label="Eliminar producto" onClick={() => deleteProduct(product)}>{trashIcon}</button>
+                    <div className="category-products" data-category={category} onDragOver={allowDrop} onDrop={() => dropProduct(category)}>
+                      {categoryProducts.map((product) => (
+                        <article
+                          className={`admin-product-row ${draggedId === product.id ? "is-dragging" : ""} ${dropTargetId === product.id ? "is-drop-target" : ""}`}
+                          key={product.id}
+                          draggable
+                          onDragStart={() => setDraggedId(product.id)}
+                          onDragEnd={() => { setDraggedId(""); setDropTargetId(""); }}
+                          onDragOver={(event) => { allowDrop(event); setDropTargetId(product.id); }}
+                          onDrop={(event) => { event.stopPropagation(); dropProduct(category, product.id); }}
+                        >
+                          <img src={publicImageUrl(product.imagen_url, fallbackImage)} alt={product.nombre} />
+                          <div>
+                            <h3>{product.nombre}</h3>
+                            <p>{product.activo ? "Activo" : "Oculto"} · {moneyFormatter.format(product.precio)}</p>
+                            <span className="category-pill">{category}</span>
+                            <div className="product-actions" aria-label="Acciones del producto">
+                              <button className="icon-button drag-button" type="button" aria-label="Arrastrar producto">{dragIcon}</button>
+                              <button className="icon-button order-button" type="button" aria-label="Subir producto" onClick={() => moveProduct(product, -1)}>{upIcon}</button>
+                              <button className="icon-button order-button" type="button" aria-label="Bajar producto" onClick={() => moveProduct(product, 1)}>{downIcon}</button>
+                              <button className="icon-button edit-button" type="button" aria-label="Editar producto" onClick={() => openEditor(product)}>{editIcon}</button>
+                              <button className="icon-button delete-button" type="button" aria-label="Eliminar producto" onClick={() => deleteProduct(product)}>{trashIcon}</button>
+                            </div>
                           </div>
-                        </div>
-                        <label className="switch-label">
-                          <input type="checkbox" checked={product.activo} onChange={() => toggleActive(product)} />
-                          <span />
-                        </label>
-                      </article>
-                    ))}
-                  </div>
-                </section>
-              );
-            })}
-          </div>
+                          <label className="switch-label">
+                            <input type="checkbox" checked={product.activo} onChange={() => toggleActive(product)} />
+                            <span />
+                          </label>
+                        </article>
+                      ))}
+                    </div>
+                  </section>
+                );
+              })}
+            </div>
+          )}
         </div>
       </section>
 
