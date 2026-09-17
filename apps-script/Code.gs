@@ -115,15 +115,24 @@ function readProducts_() {
 
 function readCategories_() {
   const fromSheet = readCategoriesFromSheet_();
+  const sheetCategoryNames = {};
   const labels = {};
 
+  fromSheet.forEach((category) => {
+    sheetCategoryNames[String(category.nombre).toLowerCase()] = true;
+  });
+
   DEFAULT_CATEGORIES.forEach((name, index) => {
-    labels[name] = { nombre: name, orden: index + 1, activo: true };
+    if (!sheetCategoryNames[name.toLowerCase()]) {
+      labels[name] = { nombre: name, orden: index + 1, activo: true };
+    }
   });
 
   readProducts_().forEach((product) => {
     const name = product.categoria || inferCategory_(product);
-    if (name && !labels[name]) labels[name] = { nombre: name, orden: Object.keys(labels).length + 1, activo: true };
+    if (name && !labels[name] && !sheetCategoryNames[String(name).toLowerCase()]) {
+      labels[name] = { nombre: name, orden: Object.keys(labels).length + 1, activo: true };
+    }
   });
 
   fromSheet.forEach((category) => {

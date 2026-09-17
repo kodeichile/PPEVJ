@@ -62,7 +62,9 @@ const dragIcon = (
 function uniqueCategories(products: EditableProduct[], extraCategories: string[] = []) {
   const labels = new Set(extraCategories.length ? extraCategories : defaultCategories);
   extraCategories.forEach((category) => labels.add(category));
-  products.forEach((product) => labels.add(product.categoria || productCategory(product)));
+  if (!extraCategories.length) {
+    products.forEach((product) => labels.add(product.categoria || productCategory(product)));
+  }
   return [...labels];
 }
 
@@ -218,7 +220,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
   }
 
   async function deleteCategory(category: string) {
-    const count = products.filter((product) => (product.categoria || productCategory(product)) === category).length;
+    const count = products.filter((product) => product.activo !== false && (product.categoria || productCategory(product)) === category).length;
     if (count > 0) {
       window.alert("Solo puedes eliminar categorías vacías. Mueve o elimina sus productos primero.");
       return;
@@ -462,7 +464,6 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
           <div className="admin-toolbar">
             <h2>Productos actuales</h2>
             <button className="button primary admin-preview-button" type="button" onClick={() => setPreviewOpen(true)}>Previsualización</button>
-            <span>Arrastra para ordenar</span>
           </div>
           {error && <p className="login-error" role="alert">{error}</p>}
           <div className="category-list">

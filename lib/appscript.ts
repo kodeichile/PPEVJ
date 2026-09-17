@@ -77,7 +77,7 @@ export async function listCategories(products: Product[] = []): Promise<string[]
     const labels = categories
       .map((category: CatalogCategory | string) => typeof category === "string" ? category : category.nombre)
       .filter(Boolean);
-    return uniqueCategories(products, labels);
+    return labels.length ? labels : uniqueCategories(products);
   } catch {
     return fallbackCategories;
   }

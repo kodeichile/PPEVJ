@@ -21,6 +21,8 @@ export default function SiteHeader() {
     setMenuOpen(false);
   }, [pathname]);
 
+  if (pathname?.startsWith("/panel")) return null;
+
   return (
     <header className="site-header">
       <div className="topbar">
