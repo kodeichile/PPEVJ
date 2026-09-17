@@ -1,6 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 export default function SiteFooter() {
+  const pathname = usePathname();
+
+  if (pathname?.startsWith("/panel")) return null;
+
   return (
     <footer className="footer" id="contacto">
       <div className="footer-grid">

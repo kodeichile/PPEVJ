@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent } from "react";
-import { moneyFormatter, productCategory } from "@/lib/catalog";
+import { moneyFormatter, productCategory, publicImageUrl } from "@/lib/catalog";
 import type { Product } from "@/lib/fallback-products";
 
 export default function AdminProductList({ products }: { products: Product[] }) {
@@ -37,7 +37,7 @@ export default function AdminProductList({ products }: { products: Product[] }) 
     <div className="admin-list">
       {products.map((product) => (
         <article className="admin-product-row" key={product.id}>
-          <img src={product.imagen_url} alt={product.nombre} />
+          <img src={publicImageUrl(product.imagen_url)} alt={product.nombre} />
           <div>
             <h3>{product.nombre}</h3>
             <p className="muted">{product.descripcion}</p>

@@ -2495,6 +2495,41 @@ button {
   opacity: 1;
 }
 
+.upload-preview-wrap,
+.edit-image-preview-wrap {
+  position: relative;
+  display: block;
+}
+
+.upload-clear-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  display: inline-grid;
+  place-items: center;
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 999px;
+  color: #fff;
+  background: rgba(10, 61, 36, 0.88);
+  box-shadow: 0 10px 20px rgba(3, 34, 19, 0.2);
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1;
+  cursor: pointer;
+  transition: transform 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+
+.upload-clear-button:hover,
+.upload-clear-button:focus-visible {
+  background: var(--green-700);
+  box-shadow: 0 12px 24px rgba(3, 34, 19, 0.28);
+  outline: none;
+  transform: translateY(-1px);
+}
+
 .visually-hidden-file {
   width: 1px !important;
   height: 1px !important;
@@ -2525,10 +2560,27 @@ button {
 
 .admin-hero {
   padding: 48px 7vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
   color: #fff;
   background:
     linear-gradient(90deg, rgba(3, 34, 19, 0.9), rgba(3, 34, 19, 0.42)),
     url("/catalogo-img/romero-30-cm-29.gif") center/cover;
+}
+
+.admin-hero .button {
+  flex: 0 0 auto;
+  color: var(--green-950);
+  background: #fff;
+  box-shadow: 0 14px 30px rgba(3, 34, 19, 0.18);
+}
+
+.admin-hero .button:hover,
+.admin-hero .button:focus-visible {
+  color: #fff;
+  background: var(--green-700);
 }
 
 .admin-hero h1 {
@@ -3355,6 +3407,16 @@ button {
 
   .login-card {
     padding: 22px;
+  }
+
+  .admin-hero {
+    padding: 32px 5vw;
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .admin-hero .button {
+    align-self: flex-end;
   }
 
   .admin-dashboard {

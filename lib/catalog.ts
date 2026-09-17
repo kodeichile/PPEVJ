@@ -23,6 +23,23 @@ export function productCategory(product: Product) {
   return categoryById.find((entry) => entry.test.some((token) => id.includes(token)))?.category || "Arbustos";
 }
 
+export function publicImageUrl(url: string | undefined, fallback = "/catalogo-img/romero-30-cm-29.gif") {
+  if (!url) return fallback;
+  const value = String(url).trim();
+  if (!value) return fallback;
+
+  const driveFileId =
+    value.match(/drive\.google\.com\/file\/d\/([^/]+)/)?.[1] ||
+    value.match(/[?&]id=([^&]+)/)?.[1] ||
+    value.match(/drive\.google\.com\/uc\?export=view&id=([^&]+)/)?.[1];
+
+  if (driveFileId && value.includes("drive.google.com")) {
+    return `https://drive.google.com/thumbnail?id=${encodeURIComponent(driveFileId)}&sz=w1200`;
+  }
+
+  return value;
+}
+
 export const moneyFormatter = new Intl.NumberFormat("es-CL", {
   style: "currency",
   currency: "CLP",

@@ -1,8 +1,8 @@
 "use client";
 
-import { ChangeEvent, DragEvent, FormEvent, useMemo, useState } from "react";
+import { ChangeEvent, DragEvent, FormEvent, useMemo, useRef, useState } from "react";
 import LogoutButton from "@/components/LogoutButton";
-import { moneyFormatter, productCategory } from "@/lib/catalog";
+import { moneyFormatter, productCategory, publicImageUrl } from "@/lib/catalog";
 import type { Product } from "@/lib/fallback-products";
 
 type EditableProduct = Product & {
@@ -59,9 +59,12 @@ const dragIcon = (
   </svg>
 );
 
-function uniqueCategories(products: EditableProduct[]) {
-  const labels = new Set(defaultCategories);
-  products.forEach((product) => labels.add(product.categoria || productCategory(product)));
+function uniqueCategories(products: EditableProduct[], extraCategories: string[] = []) {
+  const labels = new Set(extraCategories.length ? extraCategories : defaultCategories);
+  extraCategories.forEach((category) => labels.add(category));
+  if (!extraCategories.length) {
+    products.forEach((product) => labels.add(product.categoria || productCategory(product)));
+  }
   return [...labels];
 }
 
@@ -102,21 +105,51 @@ async function saveProduct(id: string, updates: Partial<EditableProduct>) {
   if (!response.ok) throw new Error(data.error || "No se pudo actualizar el producto.");
 }
 
-export default function AdminCatalogPanel({ initialProducts }: { initialProducts: Product[] }) {
+async function saveCategory(nombre: string) {
+  const response = await fetch("/api/categorias", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nombre })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "No se pudo guardar la categoría.");
+}
+
+async function updateCategoryName(nombre: string, nuevoNombre: string) {
+  const response = await fetch(`/api/categorias/${encodeURIComponent(nombre)}`, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nombre: nuevoNombre })
+  });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "No se pudo actualizar la categoría.");
+}
+
+async function removeCategory(nombre: string) {
+  const response = await fetch(`/api/categorias/${encodeURIComponent(nombre)}`, { method: "DELETE" });
+  const data = await response.json().catch(() => ({}));
+  if (!response.ok) throw new Error(data.error || "No se pudo eliminar la categoría.");
+}
+
+export default function AdminCatalogPanel({ initialProducts, initialCategories }: { initialProducts: Product[]; initialCategories: string[] }) {
   const normalizedInitialProducts = useMemo(() => normalizeProducts(initialProducts), [initialProducts]);
   const [products, setProducts] = useState<EditableProduct[]>(() => normalizedInitialProducts);
-  const [categories, setCategories] = useState(() => uniqueCategories(normalizedInitialProducts));
-  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(uniqueCategories(normalizedInitialProducts)));
+  const initialCategoryList = useMemo(() => uniqueCategories(normalizedInitialProducts, initialCategories), [normalizedInitialProducts, initialCategories]);
+  const [categories, setCategories] = useState(() => initialCategoryList);
+  const [collapsed, setCollapsed] = useState<Set<string>>(() => new Set(initialCategoryList));
   const [productFormCollapsed, setProductFormCollapsed] = useState(true);
   const [categoryName, setCategoryName] = useState("");
   const [addPreview, setAddPreview] = useState("");
   const [editing, setEditing] = useState<EditableProduct | null>(null);
   const [editPreview, setEditPreview] = useState("");
+  const [editUploadSelected, setEditUploadSelected] = useState(false);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [draggedId, setDraggedId] = useState("");
   const [dropTargetId, setDropTargetId] = useState("");
   const [saving, setSaving] = useState("");
   const [error, setError] = useState("");
+  const addFileInputRef = useRef<HTMLInputElement>(null);
+  const editFileInputRef = useRef<HTMLInputElement>(null);
 
   const groupedProducts = useMemo(() => {
     return categories.map((category) => ({
@@ -138,18 +171,33 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
     });
   }
 
-  function createCategory(event: FormEvent<HTMLFormElement>) {
+  async function createCategory(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const label = categoryName.trim();
     if (!label) return;
+    if (categories.some((item) => item.toLowerCase() === label.toLowerCase())) {
+      setCategoryName("");
+      return;
+    }
+    const previousCategories = categories;
+    setError("");
     setCategories((current) => current.some((item) => item.toLowerCase() === label.toLowerCase()) ? current : [...current, label]);
     setCollapsed((current) => new Set(current).add(label));
     setCategoryName("");
+    try {
+      await saveCategory(label);
+    } catch (caught) {
+      setCategories(previousCategories);
+      setError(caught instanceof Error ? caught.message : "No se pudo guardar la categoría.");
+    }
   }
 
-  function renameCategory(category: string) {
+  async function renameCategory(category: string) {
     const label = window.prompt("Nuevo nombre de la categoría", category)?.trim();
     if (!label || label === category) return;
+    const previousCategories = categories;
+    const previousProducts = products;
+    setError("");
     setCategories((current) => current.map((item) => (item === category ? label : item)));
     setCollapsed((current) => {
       const next = new Set(current);
@@ -160,17 +208,33 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
     setProducts((current) => current.map((product) => (
       (product.categoria || productCategory(product)) === category ? { ...product, categoria: label } : product
     )));
+    try {
+      await updateCategoryName(category, label);
+    } catch (caught) {
+      setCategories(previousCategories);
+      setProducts(previousProducts);
+      setError(caught instanceof Error ? caught.message : "No se pudo renombrar la categoría.");
+      return;
+    }
     affected.forEach((product) => saveProduct(product.id, { categoria: label }).catch(() => undefined));
   }
 
-  function deleteCategory(category: string) {
-    const count = products.filter((product) => (product.categoria || productCategory(product)) === category).length;
+  async function deleteCategory(category: string) {
+    const count = products.filter((product) => product.activo !== false && (product.categoria || productCategory(product)) === category).length;
     if (count > 0) {
       window.alert("Solo puedes eliminar categorías vacías. Mueve o elimina sus productos primero.");
       return;
     }
     if (!window.confirm("¿Eliminar esta categoría?")) return;
+    const previousCategories = categories;
+    setError("");
     setCategories((current) => current.filter((item) => item !== category));
+    try {
+      await removeCategory(category);
+    } catch (caught) {
+      setCategories(previousCategories);
+      setError(caught instanceof Error ? caught.message : "No se pudo eliminar la categoría.");
+    }
   }
 
   function updateAddPreview(event: ChangeEvent<HTMLInputElement>) {
@@ -178,16 +242,31 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
     if (file) setAddPreview(URL.createObjectURL(file));
   }
 
+  function clearAddImage() {
+    setAddPreview("");
+    if (addFileInputRef.current) addFileInputRef.current.value = "";
+  }
+
   function updateEditPreview(event: ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
-    if (file) setEditPreview(URL.createObjectURL(file));
+    if (file) {
+      setEditPreview(URL.createObjectURL(file));
+      setEditUploadSelected(true);
+    }
+  }
+
+  function clearEditImage() {
+    setEditPreview(publicImageUrl(editing?.imagen_url, fallbackImage));
+    setEditUploadSelected(false);
+    if (editFileInputRef.current) editFileInputRef.current.value = "";
   }
 
   async function createProduct(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    const formElement = event.currentTarget;
     setSaving("create");
     setError("");
-    const form = new FormData(event.currentTarget);
+    const form = new FormData(formElement);
     try {
       const file = form.get("imagen") as File;
       let imagen_url = String(form.get("imagen_url") || "");
@@ -214,8 +293,8 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
       const created = (data.product || { ...payload, id: crypto.randomUUID() }) as EditableProduct;
       setProducts((current) => sortProducts([...current, created]));
       if (!categories.includes(categoria)) setCategories((current) => [...current, categoria]);
-      event.currentTarget.reset();
-      setAddPreview("");
+      formElement.reset();
+      clearAddImage();
       setProductFormCollapsed(true);
     } catch (caught) {
       setError(caught instanceof Error ? caught.message : "No se pudo guardar el producto.");
@@ -226,7 +305,9 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
 
   function openEditor(product: EditableProduct) {
     setEditing(product);
-    setEditPreview(product.imagen_url || fallbackImage);
+    setEditPreview(publicImageUrl(product.imagen_url, fallbackImage));
+    setEditUploadSelected(false);
+    if (editFileInputRef.current) editFileInputRef.current.value = "";
   }
 
   async function submitEditor(event: FormEvent<HTMLFormElement>) {
@@ -237,7 +318,7 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
     const form = new FormData(event.currentTarget);
     try {
       const file = form.get("imagen") as File;
-      let imagen_url = editPreview || editing.imagen_url || fallbackImage;
+      let imagen_url = editing.imagen_url || fallbackImage;
       if (file?.size) imagen_url = await uploadImage(file);
       const updates: Partial<EditableProduct> = {
         nombre: String(form.get("nombre") || ""),
@@ -365,8 +446,13 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
               <label>Descripción<textarea name="descripcion" rows={4} placeholder="Altura, cuidados o disponibilidad" /></label>
               <label className="admin-upload-field">
                 Imagen
-                {addPreview && <img className="admin-upload-preview has-image" src={addPreview} alt="Vista previa del producto" />}
-                <span className="file-drop admin-file-drop">Seleccionar foto<input name="imagen" type="file" accept="image/*" onChange={updateAddPreview} /></span>
+                {addPreview && (
+                  <span className="upload-preview-wrap">
+                    <img className="admin-upload-preview has-image" src={addPreview} alt="Vista previa del producto" />
+                    <button className="upload-clear-button" type="button" aria-label="Quitar foto seleccionada" onClick={clearAddImage}>×</button>
+                  </span>
+                )}
+                <span className="file-drop admin-file-drop">Seleccionar foto<input ref={addFileInputRef} name="imagen" type="file" accept="image/*" onChange={updateAddPreview} /></span>
               </label>
               <label>URL de imagen<input name="imagen_url" placeholder="Opcional si subes archivo" /></label>
               <button className="button primary" type="submit" disabled={saving === "create"}>{saving === "create" ? "Guardando..." : "Guardar producto"}</button>
@@ -378,7 +464,6 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
           <div className="admin-toolbar">
             <h2>Productos actuales</h2>
             <button className="button primary admin-preview-button" type="button" onClick={() => setPreviewOpen(true)}>Previsualización</button>
-            <span>Arrastra para ordenar</span>
           </div>
           {error && <p className="login-error" role="alert">{error}</p>}
           <div className="category-list">
@@ -407,7 +492,7 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
                         onDragOver={(event) => { allowDrop(event); setDropTargetId(product.id); }}
                         onDrop={(event) => { event.stopPropagation(); dropProduct(category, product.id); }}
                       >
-                        <img src={product.imagen_url || fallbackImage} alt={product.nombre} />
+                        <img src={publicImageUrl(product.imagen_url, fallbackImage)} alt={product.nombre} />
                         <div>
                           <h3>{product.nombre}</h3>
                           <p>{product.activo ? "Activo" : "Oculto"} · {moneyFormatter.format(product.precio)}</p>
@@ -446,8 +531,11 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
             </div>
             <div className="edit-product-grid">
               <div className="edit-image-panel">
-                <img src={editPreview || editing.imagen_url || fallbackImage} alt={`Vista previa de ${editing.nombre}`} />
-                <label className="file-drop">Cambiar foto<input name="imagen" type="file" accept="image/*" onChange={updateEditPreview} /></label>
+                <div className="edit-image-preview-wrap">
+                  <img src={editPreview || publicImageUrl(editing.imagen_url, fallbackImage)} alt={`Vista previa de ${editing.nombre}`} />
+                  {editUploadSelected && <button className="upload-clear-button" type="button" aria-label="Quitar foto seleccionada" onClick={clearEditImage}>×</button>}
+                </div>
+                <label className="file-drop">Cambiar foto<input ref={editFileInputRef} name="imagen" type="file" accept="image/*" onChange={updateEditPreview} /></label>
               </div>
               <div className="edit-fields">
                 <label>Nombre<input name="nombre" type="text" required defaultValue={editing.nombre} /></label>
@@ -485,7 +573,7 @@ export default function AdminCatalogPanel({ initialProducts }: { initialProducts
             <div className="preview-grid" aria-live="polite">
               {activeProducts.map((product) => (
                 <article className="preview-card" key={product.id}>
-                  <img src={product.imagen_url || fallbackImage} alt={product.nombre} />
+                  <img src={publicImageUrl(product.imagen_url, fallbackImage)} alt={product.nombre} />
                   <div className="preview-card-body">
                     <span>{product.categoria || productCategory(product)}</span>
                     <h4>{product.nombre}</h4>
