@@ -2,7 +2,7 @@
 
 import { ChangeEvent, DragEvent, FormEvent, useMemo, useRef, useState } from "react";
 import LogoutButton from "@/components/LogoutButton";
-import { moneyFormatter, productCategory } from "@/lib/catalog";
+import { moneyFormatter, productCategory, publicImageUrl } from "@/lib/catalog";
 import type { Product } from "@/lib/fallback-products";
 
 type EditableProduct = Product & {
@@ -254,7 +254,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
   }
 
   function clearEditImage() {
-    setEditPreview(editing?.imagen_url || fallbackImage);
+    setEditPreview(publicImageUrl(editing?.imagen_url, fallbackImage));
     setEditUploadSelected(false);
     if (editFileInputRef.current) editFileInputRef.current.value = "";
   }
@@ -303,7 +303,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
 
   function openEditor(product: EditableProduct) {
     setEditing(product);
-    setEditPreview(product.imagen_url || fallbackImage);
+    setEditPreview(publicImageUrl(product.imagen_url, fallbackImage));
     setEditUploadSelected(false);
     if (editFileInputRef.current) editFileInputRef.current.value = "";
   }
@@ -316,7 +316,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
     const form = new FormData(event.currentTarget);
     try {
       const file = form.get("imagen") as File;
-      let imagen_url = editPreview || editing.imagen_url || fallbackImage;
+      let imagen_url = editing.imagen_url || fallbackImage;
       if (file?.size) imagen_url = await uploadImage(file);
       const updates: Partial<EditableProduct> = {
         nombre: String(form.get("nombre") || ""),
@@ -491,7 +491,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
                         onDragOver={(event) => { allowDrop(event); setDropTargetId(product.id); }}
                         onDrop={(event) => { event.stopPropagation(); dropProduct(category, product.id); }}
                       >
-                        <img src={product.imagen_url || fallbackImage} alt={product.nombre} />
+                        <img src={publicImageUrl(product.imagen_url, fallbackImage)} alt={product.nombre} />
                         <div>
                           <h3>{product.nombre}</h3>
                           <p>{product.activo ? "Activo" : "Oculto"} · {moneyFormatter.format(product.precio)}</p>
@@ -531,7 +531,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
             <div className="edit-product-grid">
               <div className="edit-image-panel">
                 <div className="edit-image-preview-wrap">
-                  <img src={editPreview || editing.imagen_url || fallbackImage} alt={`Vista previa de ${editing.nombre}`} />
+                  <img src={editPreview || publicImageUrl(editing.imagen_url, fallbackImage)} alt={`Vista previa de ${editing.nombre}`} />
                   {editUploadSelected && <button className="upload-clear-button" type="button" aria-label="Quitar foto seleccionada" onClick={clearEditImage}>×</button>}
                 </div>
                 <label className="file-drop">Cambiar foto<input ref={editFileInputRef} name="imagen" type="file" accept="image/*" onChange={updateEditPreview} /></label>
@@ -572,7 +572,7 @@ export default function AdminCatalogPanel({ initialProducts, initialCategories }
             <div className="preview-grid" aria-live="polite">
               {activeProducts.map((product) => (
                 <article className="preview-card" key={product.id}>
-                  <img src={product.imagen_url || fallbackImage} alt={product.nombre} />
+                  <img src={publicImageUrl(product.imagen_url, fallbackImage)} alt={product.nombre} />
                   <div className="preview-card-body">
                     <span>{product.categoria || productCategory(product)}</span>
                     <h4>{product.nombre}</h4>

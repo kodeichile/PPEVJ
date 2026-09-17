@@ -281,7 +281,7 @@ function subirImagen_(body) {
   const blob = Utilities.newBlob(bytes, body.mimeType || "image/jpeg", body.nombreArchivo || "producto.jpg");
   const file = folder.createFile(blob);
   file.setSharing(DriveApp.Access.ANYONE_WITH_LINK, DriveApp.Permission.VIEW);
-  return { ok: true, url: "https://drive.google.com/uc?export=view&id=" + file.getId() };
+  return { ok: true, url: "https://drive.google.com/thumbnail?id=" + file.getId() + "&sz=w1200" };
 }
 
 function friendlyError_(error) {

@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/lib/fallback-products";
-import { moneyFormatter, productCategories, productCategory } from "@/lib/catalog";
+import { moneyFormatter, productCategories, productCategory, publicImageUrl } from "@/lib/catalog";
 
 type CartLine = Product & { quantity: number };
 
@@ -82,7 +82,7 @@ export default function ProductCatalog({ products, featured = false }: { product
           {filteredProducts.map((product) => (
             <article className="product-card catalog-item" key={product.id}>
               <button className="favorite" type="button" aria-label="Agregar a favoritos">&#9825;</button>
-              <img src={product.imagen_url} alt={product.nombre} />
+              <img src={publicImageUrl(product.imagen_url)} alt={product.nombre} />
               <div className="product-info">
                 <span className="product-category">{productCategory(product)}</span>
                 <h3>{product.nombre}</h3>
@@ -107,7 +107,7 @@ export default function ProductCatalog({ products, featured = false }: { product
         <div className="cart-items">
           {cart.length === 0 ? <p className="empty-cart">Agrega productos para cotizar por WhatsApp.</p> : cart.map((item) => (
             <article className="cart-line" key={item.id}>
-              <img src={item.imagen_url} alt={item.nombre} />
+              <img src={publicImageUrl(item.imagen_url)} alt={item.nombre} />
               <div>
                 <h3>{item.nombre}</h3>
                 <p>{moneyFormatter.format(item.precio)} x {item.quantity}</p>

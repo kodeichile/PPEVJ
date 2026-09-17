@@ -1,4 +1,5 @@
 import type { Product } from "@/lib/fallback-products";
+import { publicImageUrl } from "@/lib/catalog";
 
 const moneyFormatter = new Intl.NumberFormat("es-CL", {
   style: "currency",
@@ -9,7 +10,7 @@ const moneyFormatter = new Intl.NumberFormat("es-CL", {
 export default function ProductCard({ product }: { product: Product }) {
   return (
     <article className="product-card">
-      <img src={product.imagen_url} alt={product.nombre} />
+      <img src={publicImageUrl(product.imagen_url)} alt={product.nombre} />
       <div className="product-info">
         <span className="badge">Vivero</span>
         <h2>{product.nombre}</h2>
