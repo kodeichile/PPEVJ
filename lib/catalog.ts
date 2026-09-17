@@ -8,6 +8,8 @@ export type Service = {
   details: string;
   image: string;
   icon: string;
+  orden?: number;
+  activo?: boolean;
 };
 
 export const productCategories = ["Todos", "Frutales", "Árboles Ornamentales", "Arbustos", "Flores", "Árboles", "Aromáticas"];
@@ -46,7 +48,7 @@ export const moneyFormatter = new Intl.NumberFormat("es-CL", {
   maximumFractionDigits: 0
 });
 
-export const services: Service[] = [
+export const defaultServices: Service[] = [
   {
     slug: "diseno-jardines",
     title: "Diseno de jardines",
@@ -54,7 +56,9 @@ export const services: Service[] = [
     description: "Planificamos espacios verdes funcionales, armonicos y faciles de mantener.",
     details: "Levantamiento, propuesta vegetal, distribucion de senderos, macizos, zonas de descanso e iluminacion.",
     image: "/imagenes-servicios/diseno-jardin-plano.jpg",
-    icon: "/catalogo-img/icons/icon-diseno-jardines.svg"
+    icon: "/catalogo-img/icons/icon-diseno-jardines.svg",
+    orden: 1,
+    activo: true
   },
   {
     slug: "preparacion",
@@ -63,7 +67,9 @@ export const services: Service[] = [
     description: "Preparamos jardines, macizos, terrazas verdes y suelos listos para plantar.",
     details: "Preparacion de terreno, plantacion, sustratos, cesped, jardineras y terminaciones de paisajismo.",
     image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=80",
-    icon: "/catalogo-img/icons/icon-jardineria.svg"
+    icon: "/catalogo-img/icons/icon-jardineria.svg",
+    orden: 2,
+    activo: true
   },
   {
     slug: "mantencion",
@@ -72,7 +78,9 @@ export const services: Service[] = [
     description: "Poda, limpieza, fertilizacion y cuidado periodico para jardines saludables.",
     details: "Programas mensuales con poda, limpieza, fertilizacion, control preventivo y reposicion de plantas.",
     image: "https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&w=900&q=80",
-    icon: "/catalogo-img/icons/icon-mantencion.svg"
+    icon: "/catalogo-img/icons/icon-mantencion.svg",
+    orden: 3,
+    activo: true
   },
   {
     slug: "riego-automatico",
@@ -81,6 +89,10 @@ export const services: Service[] = [
     description: "Instalacion y ajuste de sistemas para ahorrar agua y mantener cobertura pareja.",
     details: "Instalacion, sectorizacion, programacion y mantencion de sistemas de riego para optimizar agua.",
     image: "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&w=900&q=80",
-    icon: "/catalogo-img/icons/icon-riego.svg"
+    icon: "/catalogo-img/icons/icon-riego.svg",
+    orden: 4,
+    activo: true
   }
 ];
+
+export const services = defaultServices;

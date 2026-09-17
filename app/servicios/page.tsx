@@ -1,7 +1,12 @@
 import Link from "next/link";
-import { services } from "@/lib/catalog";
+import { publicImageUrl } from "@/lib/catalog";
+import { listServices } from "@/lib/appscript";
 
-export default function ServiciosPage() {
+export const dynamic = "force-dynamic";
+
+export default async function ServiciosPage() {
+  const services = await listServices();
+
   return (
     <main>
       <section className="page-hero services-hero">
@@ -13,9 +18,9 @@ export default function ServiciosPage() {
       </section>
       <section className="section services-section">
         <div className="service-grid wide-services">
-          {services.map((service) => (
+          {services.filter((service) => service.activo !== false).map((service) => (
             <article className="service-card" key={service.slug}>
-              <img src={service.image} alt={service.title} />
+              <img src={publicImageUrl(service.image)} alt={service.title} />
               <div>
                 <span className="service-icon"><img src={service.icon} alt="" /></span>
                 <h3>{service.title}</h3>

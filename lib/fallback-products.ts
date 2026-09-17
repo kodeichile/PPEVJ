@@ -7,6 +7,8 @@ export type Product = {
   activo: boolean;
   categoria?: string;
   orden?: number;
+  destacado?: boolean;
+  destacado_orden?: number;
   fecha_creacion?: string;
 };
 

@@ -1,5 +1,6 @@
 const PRODUCT_SHEET_NAME = "Productos";
 const CATEGORY_SHEET_NAME = "Categorias";
+const SERVICE_SHEET_NAME = "Servicios";
 const DEFAULT_DRIVE_FOLDER_ID = "1f2g3Qv7iT_qfND7KplLwNtzHUIC1jKqW";
 
 const PRODUCT_HEADERS = [
@@ -11,12 +12,21 @@ const PRODUCT_HEADERS = [
   "orden",
   "activo",
   "imagen_url",
+  "destacado",
+  "destacado_orden",
   "created_at",
   "updated_at"
 ];
 
 const CATEGORY_HEADERS = ["nombre", "orden", "activo", "created_at", "updated_at"];
+const SERVICE_HEADERS = ["slug", "title", "shortTitle", "description", "details", "image", "icon", "orden", "activo", "created_at", "updated_at"];
 const DEFAULT_CATEGORIES = ["Frutales", "Árboles Ornamentales", "Arbustos", "Flores", "Árboles", "Aromáticas"];
+const DEFAULT_SERVICES = [
+  ["diseno-jardines", "Diseno de jardines", "Diseno de jardines", "Planificamos espacios verdes funcionales, armonicos y faciles de mantener.", "Levantamiento, propuesta vegetal, distribucion de senderos, macizos, zonas de descanso e iluminacion.", "/imagenes-servicios/diseno-jardin-plano.jpg", "/catalogo-img/icons/icon-diseno-jardines.svg", 1, true],
+  ["preparacion", "Preparacion", "Preparacion", "Preparamos jardines, macizos, terrazas verdes y suelos listos para plantar.", "Preparacion de terreno, plantacion, sustratos, cesped, jardineras y terminaciones de paisajismo.", "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?auto=format&fit=crop&w=900&q=80", "/catalogo-img/icons/icon-jardineria.svg", 2, true],
+  ["mantencion", "Mantencion", "Mantencion", "Poda, limpieza, fertilizacion y cuidado periodico para jardines saludables.", "Programas mensuales con poda, limpieza, fertilizacion, control preventivo y reposicion de plantas.", "https://images.unsplash.com/photo-1591857177580-dc82b9ac4e1e?auto=format&fit=crop&w=900&q=80", "/catalogo-img/icons/icon-mantencion.svg", 3, true],
+  ["riego-automatico", "Riego automatico", "Riego", "Instalacion y ajuste de sistemas para ahorrar agua y mantener cobertura pareja.", "Instalacion, sectorizacion, programacion y mantencion de sistemas de riego para optimizar agua.", "https://images.unsplash.com/photo-1622383563227-04401ab4e5ea?auto=format&fit=crop&w=900&q=80", "/catalogo-img/icons/icon-riego.svg", 4, true]
+];
 
 function doGet(e) {
   try {
@@ -31,6 +41,11 @@ function doGet(e) {
     if (action === "listar_categorias") {
       if (!admin) return json_({ ok: false, error: "No autorizado. Revisa API_TOKEN en Apps Script y APPSCRIPT_TOKEN en Vercel." }, 401);
       return json_({ ok: true, categories: readCategories_() });
+    }
+
+    if (action === "listar_servicios") {
+      const services = readServices_().filter((service) => admin || service.activo === true);
+      return json_({ ok: true, services });
     }
 
     return json_({ ok: false, error: "Acción no soportada: " + action }, 400);
@@ -53,6 +68,7 @@ function doPost(e) {
     if (body.action === "crear_categoria") return json_(crearCategoria_(body.category || {}));
     if (body.action === "renombrar_categoria") return json_(renombrarCategoria_(body.nombre, body.nuevoNombre));
     if (body.action === "eliminar_categoria") return json_(eliminarCategoria_(body.nombre));
+    if (body.action === "actualizar_servicio") return json_(actualizarServicio_(body.slug, body.service || {}));
 
     return json_({ ok: false, error: "Acción no soportada: " + body.action }, 400);
   } catch (error) {
@@ -77,6 +93,12 @@ function productsSheet_() {
 function categoriesSheet_() {
   const sheet = ensureSheet_(CATEGORY_SHEET_NAME, CATEGORY_HEADERS);
   seedDefaultCategories_(sheet);
+  return sheet;
+}
+
+function servicesSheet_() {
+  const sheet = ensureSheet_(SERVICE_SHEET_NAME, SERVICE_HEADERS);
+  seedDefaultServices_(sheet);
   return sheet;
 }
 
@@ -109,6 +131,8 @@ function readProducts_() {
     product.orden = Number(product.orden) || 0;
     product.categoria = product.categoria || inferCategory_(product);
     product.activo = product.activo === true || String(product.activo).toUpperCase() === "TRUE";
+    product.destacado = product.destacado === true || String(product.destacado).toUpperCase() === "TRUE";
+    product.destacado_orden = Number(product.destacado_orden) || 0;
     return product;
   });
 }
@@ -165,6 +189,26 @@ function seedDefaultCategories_(sheet) {
   });
 }
 
+function seedDefaultServices_(sheet) {
+  if (sheet.getLastRow() > 1) return;
+  const now = new Date().toISOString();
+  DEFAULT_SERVICES.forEach((service) => {
+    sheet.appendRow([service[0], service[1], service[2], service[3], service[4], service[5], service[6], service[7], service[8], now, now]);
+  });
+}
+
+function readServices_() {
+  const values = servicesSheet_().getDataRange().getValues();
+  const headers = values.shift() || [];
+  return values.filter((row) => row[headers.indexOf("slug")]).map((row) => {
+    const service = {};
+    headers.forEach((header, index) => service[header] = row[index]);
+    service.orden = Number(service.orden) || 0;
+    service.activo = service.activo === true || String(service.activo).toUpperCase() === "TRUE";
+    return service;
+  }).sort((a, b) => (Number(a.orden) || 0) - (Number(b.orden) || 0));
+}
+
 function crearProducto_(product) {
   const id = product.id || Utilities.getUuid();
   const now = new Date().toISOString();
@@ -177,6 +221,8 @@ function crearProducto_(product) {
     orden: Number(product.orden) || 0,
     activo: product.activo !== false,
     imagen_url: product.imagen_url || "",
+    destacado: product.destacado === true,
+    destacado_orden: Number(product.destacado_orden) || 0,
     created_at: product.created_at || now,
     updated_at: now
   };
@@ -205,6 +251,34 @@ function actualizarProducto_(id, updates) {
 
   if (nextUpdates.categoria) crearCategoria_({ nombre: nextUpdates.categoria });
   return { ok: true };
+}
+
+function actualizarServicio_(slug, updates) {
+  slug = String(slug || "").trim();
+  if (!slug) return { ok: false, error: "Servicio requerido" };
+
+  const sheet = servicesSheet_();
+  const values = sheet.getDataRange().getValues();
+  const headers = values[0];
+  const slugColumn = headers.indexOf("slug");
+  const rowIndex = values.findIndex((row, index) => index > 0 && String(row[slugColumn]) === slug);
+
+  if (rowIndex < 1) return { ok: false, error: "Servicio no encontrado: " + slug };
+
+  const current = {};
+  headers.forEach((header, index) => current[header] = values[rowIndex][index]);
+  const nextUpdates = Object.assign({}, updates, {
+    slug,
+    icon: updates.icon || current.icon,
+    updated_at: new Date().toISOString()
+  });
+
+  Object.keys(nextUpdates || {}).forEach((key) => {
+    const column = headers.indexOf(key);
+    if (column >= 0) sheet.getRange(rowIndex + 1, column + 1).setValue(nextUpdates[key]);
+  });
+
+  return { ok: true, service: Object.assign({}, current, nextUpdates) };
 }
 
 function crearCategoria_(category) {

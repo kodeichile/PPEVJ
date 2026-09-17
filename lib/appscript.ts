@@ -1,4 +1,5 @@
 import { fallbackProducts, type Product } from "./fallback-products";
+import { defaultServices, type Service } from "./catalog";
 
 const APPSCRIPT_URL = process.env.APPSCRIPT_URL;
 const APPSCRIPT_TOKEN = process.env.APPSCRIPT_TOKEN;
@@ -103,6 +104,28 @@ export async function updateProduct(id: string, product: Partial<Product>) {
   return callAppsScript<{ ok: boolean; product: Product }>({ action: "actualizar", id, product });
 }
 
+export async function listServices(): Promise<Service[]> {
+  if (!APPSCRIPT_URL || !APPSCRIPT_TOKEN) return defaultServices;
+
+  const url = new URL(APPSCRIPT_URL);
+  url.searchParams.set("action", "listar_servicios");
+  url.searchParams.set("token", APPSCRIPT_TOKEN);
+
+  try {
+    const response = await fetch(url, { cache: "no-store" });
+    if (!response.ok) return defaultServices;
+    const data = await response.json();
+    const services = Array.isArray(data) ? data : data.services || [];
+    return services.length ? sortServices(services) : defaultServices;
+  } catch {
+    return defaultServices;
+  }
+}
+
+export async function updateService(slug: string, service: Partial<Service>) {
+  return callAppsScript<{ ok: boolean; service: Service }>({ action: "actualizar_servicio", slug, service });
+}
+
 export async function deactivateProduct(id: string) {
   return callAppsScript<{ ok: boolean }>({ action: "eliminar", id });
 }
@@ -125,6 +148,12 @@ function sortProducts(products: Product[]) {
     if (categoryCompare !== 0) return categoryCompare;
     return (Number(a.orden) || 0) - (Number(b.orden) || 0);
   });
+}
+
+function sortServices(services: Service[]) {
+  return [...services]
+    .filter((service) => service.slug)
+    .sort((a, b) => (Number(a.orden) || 0) - (Number(b.orden) || 0));
 }
 
 function uniqueCategories(products: Product[] = [], extraCategories: string[] = []) {

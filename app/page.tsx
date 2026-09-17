@@ -1,15 +1,19 @@
 import Link from "next/link";
 import type { CSSProperties } from "react";
 import ProductCatalog from "@/components/ProductCatalog";
-import { services } from "@/lib/catalog";
-import { listProducts } from "@/lib/appscript";
+import { publicImageUrl } from "@/lib/catalog";
+import { listProducts, listServices } from "@/lib/appscript";
 import { fallbackProducts } from "@/lib/fallback-products";
 
 export const dynamic = "force-dynamic";
 
 export default async function Home() {
   const products = await listProducts();
+  const services = await listServices();
   const displayProducts = products.length ? products : fallbackProducts.filter((product) => product.activo);
+  const featuredProducts = displayProducts
+    .filter((product) => product.activo && product.destacado)
+    .sort((a, b) => (Number(a.destacado_orden) || 0) - (Number(b.destacado_orden) || 0));
 
   return (
     <main>
@@ -52,15 +56,15 @@ export default async function Home() {
           <div className="section-title"><h2>Productos destacados</h2></div>
           <Link className="view-all" href="/productos">Ver todos los productos</Link>
         </div>
-        <ProductCatalog products={displayProducts} featured />
+        <ProductCatalog products={featuredProducts.length ? featuredProducts : displayProducts} featured />
       </section>
 
       <section className="section services-section" id="servicios">
         <div className="section-title"><h2>Nuestros servicios</h2></div>
         <div className="service-grid">
-          {services.map((service) => (
+          {services.filter((service) => service.activo !== false).map((service) => (
             <article className="service-card" key={service.slug}>
-              <img src={service.image} alt={service.title} />
+              <img src={publicImageUrl(service.image)} alt={service.title} />
               <div>
                 <span className="service-icon"><img src={service.icon} alt="" /></span>
                 <h3>{service.title}</h3>
