@@ -2413,6 +2413,7 @@ button {
 
 .login-form label,
 .admin-form label,
+.admin-service-editor label,
 .edit-fields label {
   display: grid;
   gap: 7px;
@@ -2425,6 +2426,9 @@ button {
 .admin-form input,
 .admin-form textarea,
 .admin-form select,
+.admin-service-editor input,
+.admin-service-editor textarea,
+.admin-service-editor select,
 .edit-fields input,
 .edit-fields select,
 .edit-fields textarea {
@@ -2440,6 +2444,7 @@ button {
 }
 
 .admin-form textarea,
+.admin-service-editor textarea,
 .edit-fields textarea {
   min-height: 112px;
   resize: vertical;
@@ -2449,6 +2454,9 @@ button {
 .admin-form input:focus,
 .admin-form textarea:focus,
 .admin-form select:focus,
+.admin-service-editor input:focus,
+.admin-service-editor textarea:focus,
+.admin-service-editor select:focus,
 .edit-fields input:focus,
 .edit-fields select:focus,
 .edit-fields textarea:focus {
@@ -2460,12 +2468,15 @@ button {
 
 .admin-form input::placeholder,
 .admin-form textarea::placeholder,
+.admin-service-editor input::placeholder,
+.admin-service-editor textarea::placeholder,
 .edit-fields input::placeholder,
 .edit-fields textarea::placeholder {
   color: #7f8d82;
 }
 
 .admin-form select,
+.admin-service-editor select,
 .edit-fields select {
   appearance: none;
   background-image:
@@ -2628,6 +2639,109 @@ button {
   height: fit-content;
   display: grid;
   gap: 14px;
+}
+
+.admin-service-nav h2,
+.admin-service-nav p {
+  margin: 0;
+}
+
+.admin-service-nav p {
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.45;
+}
+
+.service-nav-list {
+  display: grid;
+  gap: 10px;
+}
+
+.service-nav-button {
+  width: 100%;
+  min-width: 0;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: 58px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  border: 1px solid #cfe1d3;
+  border-radius: 8px;
+  color: var(--green-950);
+  background: #f7fbf8;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease, box-shadow 160ms ease, transform 160ms ease;
+}
+
+.service-nav-button:hover,
+.service-nav-button:focus-visible,
+.service-nav-button.is-active {
+  border-color: var(--green-700);
+  background: #fff;
+  box-shadow: 0 12px 24px rgba(12, 45, 27, 0.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.service-nav-button img {
+  width: 58px;
+  height: 48px;
+  border-radius: 7px;
+  object-fit: cover;
+}
+
+.service-nav-button span {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+
+.service-nav-button strong,
+.service-nav-button small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.service-nav-button strong {
+  white-space: nowrap;
+  font-size: 14px;
+}
+
+.service-nav-button small {
+  display: -webkit-box;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.35;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.admin-service-editor {
+  display: grid;
+  gap: 16px;
+}
+
+.admin-service-toolbar {
+  align-items: flex-start;
+}
+
+.admin-service-toolbar .eyebrow {
+  margin-bottom: 4px;
+}
+
+.service-editor-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 14px;
+}
+
+.service-editor-grid label:nth-of-type(4),
+.service-editor-grid label:nth-of-type(5),
+.service-editor-grid .admin-upload-field,
+.service-editor-grid label:last-child {
+  grid-column: 1 / -1;
 }
 
 .collapsible-form {
@@ -3472,6 +3586,19 @@ button {
 
   .preview-card img {
     height: 130px;
+  }
+
+  .service-nav-button {
+    grid-template-columns: 52px minmax(0, 1fr);
+  }
+
+  .service-nav-button img {
+    width: 52px;
+    height: 44px;
+  }
+
+  .service-editor-grid {
+    grid-template-columns: 1fr;
   }
 
   .edit-product-form {
