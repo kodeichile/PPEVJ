@@ -1,7 +1,7 @@
 import ProductCatalog from "@/components/ProductCatalog";
 import { listProducts } from "@/lib/appscript";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function ProductosPage() {
   const products = await listProducts();

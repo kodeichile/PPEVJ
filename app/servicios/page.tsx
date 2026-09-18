@@ -2,7 +2,7 @@ import Link from "next/link";
 import { publicImageUrl } from "@/lib/catalog";
 import { listServices } from "@/lib/appscript";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function ServiciosPage() {
   const services = await listServices();

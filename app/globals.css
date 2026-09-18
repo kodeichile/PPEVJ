@@ -69,6 +69,18 @@ button {
   animation: topbarMarquee 18s linear infinite;
 }
 
+@media (min-width: 901px) {
+  .topbar {
+    gap: 86px;
+  }
+
+  .topbar span {
+    letter-spacing: 0.12em;
+    word-spacing: 0.18em;
+    text-transform: uppercase;
+  }
+}
+
 .navbar {
   min-height: 136px;
   padding: 10px 7vw;

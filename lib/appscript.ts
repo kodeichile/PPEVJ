@@ -6,6 +6,10 @@ const APPSCRIPT_TOKEN = process.env.APPSCRIPT_TOKEN;
 
 type ProductInput = Omit<Product, "id" | "fecha_creacion"> & { id?: string };
 type AppScriptPayload = Record<string, unknown> & { action?: string };
+type ReadOptions = {
+  includeInactive?: boolean;
+  fresh?: boolean;
+};
 export type CatalogCategory = {
   nombre: string;
   orden?: number;
@@ -43,7 +47,7 @@ async function callAppsScript<T>(payload: AppScriptPayload): Promise<T> {
   return data as T;
 }
 
-export async function listProducts({ includeInactive = false } = {}): Promise<Product[]> {
+export async function listProducts({ includeInactive = false, fresh = false }: ReadOptions = {}): Promise<Product[]> {
   const localProducts = sortProducts(includeInactive ? fallbackProducts : fallbackProducts.filter((p) => p.activo));
   if (!APPSCRIPT_URL) return localProducts;
 
@@ -51,7 +55,7 @@ export async function listProducts({ includeInactive = false } = {}): Promise<Pr
   url.searchParams.set("action", "listar");
   if (includeInactive) url.searchParams.set("token", APPSCRIPT_TOKEN || "");
 
-  const response = await fetch(url, { cache: "no-store" });
+  const response = await fetch(url, fresh || includeInactive ? { cache: "no-store" } : { next: { revalidate: 60 } });
   if (!response.ok) return localProducts;
   const data = await response.json();
   const products = Array.isArray(data) ? data : data.products || [];
@@ -62,7 +66,7 @@ export async function createProduct(product: ProductInput) {
   return callAppsScript<{ ok: boolean; product: Product }>({ action: "crear", product });
 }
 
-export async function listCategories(products: Product[] = []): Promise<string[]> {
+export async function listCategories(products: Product[] = [], { fresh = false }: Pick<ReadOptions, "fresh"> = {}): Promise<string[]> {
   const fallbackCategories = uniqueCategories(products);
   if (!APPSCRIPT_URL || !APPSCRIPT_TOKEN) return fallbackCategories;
 
@@ -71,7 +75,7 @@ export async function listCategories(products: Product[] = []): Promise<string[]
   url.searchParams.set("token", APPSCRIPT_TOKEN);
 
   try {
-    const response = await fetch(url, { cache: "no-store" });
+    const response = await fetch(url, fresh ? { cache: "no-store" } : { next: { revalidate: 60 } });
     if (!response.ok) return fallbackCategories;
     const data = await response.json();
     const categories = Array.isArray(data) ? data : data.categories || [];
@@ -104,7 +108,7 @@ export async function updateProduct(id: string, product: Partial<Product>) {
   return callAppsScript<{ ok: boolean; product: Product }>({ action: "actualizar", id, product });
 }
 
-export async function listServices(): Promise<Service[]> {
+export async function listServices({ fresh = false }: Pick<ReadOptions, "fresh"> = {}): Promise<Service[]> {
   if (!APPSCRIPT_URL || !APPSCRIPT_TOKEN) return defaultServices;
 
   const url = new URL(APPSCRIPT_URL);
@@ -112,7 +116,7 @@ export async function listServices(): Promise<Service[]> {
   url.searchParams.set("token", APPSCRIPT_TOKEN);
 
   try {
-    const response = await fetch(url, { cache: "no-store" });
+    const response = await fetch(url, fresh ? { cache: "no-store" } : { next: { revalidate: 60 } });
     if (!response.ok) return defaultServices;
     const data = await response.json();
     const services = Array.isArray(data) ? data : data.services || [];
