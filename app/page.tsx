@@ -5,7 +5,7 @@ import { publicImageUrl } from "@/lib/catalog";
 import { listProducts, listServices } from "@/lib/appscript";
 import { fallbackProducts } from "@/lib/fallback-products";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function Home() {
   const products = await listProducts();

@@ -8,9 +8,9 @@ export const dynamic = "force-dynamic";
 export default async function PanelPage() {
   const user = await getSessionUser();
   if (!user) redirect("/ingresar");
-  const products = await listProducts({ includeInactive: true });
-  const categories = await listCategories(products);
-  const services = await listServices();
+  const products = await listProducts({ includeInactive: true, fresh: true });
+  const categories = await listCategories(products, { fresh: true });
+  const services = await listServices({ fresh: true });
 
   return <AdminCatalogPanel initialProducts={products} initialCategories={categories} initialServices={services} />;
 }
